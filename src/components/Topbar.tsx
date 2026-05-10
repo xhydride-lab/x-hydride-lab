@@ -5,64 +5,72 @@ import { cn } from "@/lib/utils/cn";
 import { LogomarkLockup } from "@/components/Logomark";
 
 interface TopbarProps {
+  /** Reserved for future demo/live signaling. Currently not rendered. */
   demoMode?: boolean;
   className?: string;
 }
 
-export function Topbar({ demoMode = true, className }: TopbarProps) {
+/**
+ * Topbar — minimal launch chrome.
+ *
+ * Left:  X-Hydride Lab lockup (logo + wordmark).
+ * Right: lightweight contextual actions.
+ *
+ * The previous "Research Console" eyebrow, version chip, and provider
+ * pill have been removed for a cleaner product feel.
+ */
+export function Topbar({ className }: TopbarProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex h-14 items-center justify-between border-b border-graphite-800 bg-graphite-950/95 px-6 backdrop-blur",
+        "sticky top-0 z-30 flex h-16 items-center justify-between border-b border-graphite-800/80 bg-graphite-950/80 px-6 backdrop-blur-xl supports-[backdrop-filter]:bg-graphite-950/60",
         className,
       )}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         <Link
           href="/"
-          className="focus-ring flex items-center gap-2 rounded-sharp"
+          className="focus-ring flex items-center gap-2 rounded-md"
           aria-label="X-Hydride Lab home"
         >
           <LogomarkLockup hideTextOnMobile />
         </Link>
-        <span className="hidden h-4 w-px bg-graphite-800 sm:block" />
-        <span className="hidden text-eyebrow sm:inline">
-          Research Console
-        </span>
       </div>
 
-      <div className="flex items-center gap-4">
-        <span
-          className="hidden font-mono text-eyebrow text-graphite-500 sm:inline"
-          data-numeric=""
-        >
-          v0.1.0
-        </span>
-        <span className="hidden h-4 w-px bg-graphite-800 sm:block" />
-        <ProviderPill demoMode={demoMode} />
-      </div>
+      <nav
+        aria-label="Primary actions"
+        className="hidden items-center gap-1 sm:flex"
+      >
+        <TopbarLink href="/overview">Overview</TopbarLink>
+        <TopbarLink href="/candidates">Generate</TopbarLink>
+        <TopbarLink href="/audit">Provenance</TopbarLink>
+      </nav>
     </header>
   );
 }
 
-export function ProviderPill({ demoMode }: { demoMode: boolean }) {
+function TopbarLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div
-      className={cn(
-        "flex items-center gap-2 rounded-sharp border px-2 py-0.5 text-eyebrow",
-        demoMode
-          ? "border-graphite-700 bg-graphite-900 text-graphite-300"
-          : "border-accent-700 bg-accent-900/40 text-accent-200",
-      )}
+    <Link
+      href={href}
+      className="focus-ring rounded-full px-3 py-1.5 text-[13px] font-medium tracking-tightish text-graphite-300 transition-colors hover:bg-white/[0.04] hover:text-graphite-50"
     >
-      <span
-        className={cn(
-          "h-1.5 w-1.5 rounded-full",
-          demoMode ? "bg-graphite-400" : "bg-accent-300",
-        )}
-      />
-      <span>{demoMode ? "Demo Mode" : "xAI Grok · live"}</span>
-    </div>
+      {children}
+    </Link>
   );
 }
 
+/**
+ * Backwards-compat export. Older imports still pull `ProviderPill` from
+ * Topbar; we keep the symbol but render nothing so removing the pill is
+ * safe across pages without code changes.
+ */
+export function ProviderPill(_: { demoMode?: boolean }) {
+  return null;
+}

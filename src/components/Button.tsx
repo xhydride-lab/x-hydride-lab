@@ -17,25 +17,30 @@ interface BaseProps {
   children: ReactNode;
 }
 
+/**
+ * Apple-style buttons: pill-shaped CTAs, hairline secondary, soft ghost.
+ * Hover and pressed states use background + transform shifts rather than
+ * heavy color changes.
+ */
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "border border-accent-500/60 bg-accent-600 text-white hover:bg-accent-500",
+    "border border-accent-500/40 bg-accent-500 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.18)] hover:bg-accent-400 active:scale-[0.99]",
   secondary:
-    "border border-graphite-700 bg-graphite-900 text-graphite-100 hover:border-graphite-600 hover:bg-graphite-850",
+    "border border-graphite-700 bg-white/[0.04] text-graphite-100 hover:bg-white/[0.07] hover:border-graphite-600 active:scale-[0.99]",
   ghost:
-    "border border-transparent bg-transparent text-graphite-300 hover:bg-graphite-900 hover:text-graphite-50",
+    "border border-transparent bg-transparent text-graphite-300 hover:bg-white/[0.05] hover:text-graphite-50",
   danger:
-    "border border-red-700/50 bg-red-900/40 text-red-100 hover:border-red-600/60 hover:bg-red-900/60",
+    "border border-red-700/40 bg-red-900/30 text-red-100 hover:bg-red-900/50 hover:border-red-600/60",
 };
 
 const SIZES: Record<Size, string> = {
-  sm: "h-8 px-3 text-caption",
-  md: "h-9 px-4 text-body",
-  lg: "h-11 px-5 text-body",
+  sm: "h-8 px-3.5 text-[12.5px]",
+  md: "h-9 px-4 text-[13px]",
+  lg: "h-11 px-5 text-[14px]",
 };
 
 const COMMON =
-  "focus-ring inline-flex items-center justify-center gap-2 rounded-sharp font-medium tracking-tightish transition-colors disabled:cursor-not-allowed disabled:opacity-60";
+  "focus-ring inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-60";
 
 export const Button = forwardRef<
   HTMLButtonElement,

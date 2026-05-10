@@ -4,13 +4,7 @@ import { cn } from "@/lib/utils/cn";
  * Logomark — the X-Hydride Lab brand mark.
  *
  * Renders the official stepped-X icon as inline SVG so it stays sharp at
- * any size and can be re-colored via Tailwind classes. To swap in a
- * raster version of the mark (e.g. an exported PNG), replace `Logomark`
- * with an `<img src="/logo-mark.png">` and keep the same outer wrapper.
- *
- * The text "X-Hydride Lab" wordmark is rendered as HTML next to the
- * mark, not inside the SVG, so the wordmark inherits the surrounding
- * font stack and stays crisp on all displays.
+ * any size and can be re-colored via Tailwind classes.
  */
 export function Logomark({
   size = 24,
@@ -68,18 +62,20 @@ export function Logomark({
         <rect x="17" y="29.6" width="1.4" height="1.4" />
       </g>
 
-      <circle cx="24" cy="24" r="3" fill="#0a0c13" stroke="#9bd4ff" strokeWidth="1.4" />
+      <circle cx="24" cy="24" r="3" fill="#070910" stroke="#9bd4ff" strokeWidth="1.4" />
       <circle cx="24" cy="24" r="1.2" fill="#cfeaff" />
     </svg>
   );
 }
 
 /**
- * LogomarkLockup — Logomark + "X-HYDRIDE LAB" wordmark, used in the
- * navigation bars. Letter-spacing and weight match the brand.
+ * LogomarkLockup — Logomark + "X-Hydride Lab" wordmark, used in the
+ * navigation bars. Wordmark uses tighter Apple-style tracking and
+ * regular weight so the brand reads as a single mark, not as two
+ * separate words competing for attention.
  */
 export function LogomarkLockup({
-  size = 22,
+  size = 24,
   className,
   hideTextOnMobile = false,
 }: {
@@ -90,19 +86,19 @@ export function LogomarkLockup({
   return (
     <span
       className={cn(
-        "flex items-center gap-2 text-graphite-50",
+        "flex items-center gap-2.5 text-graphite-50",
         className,
       )}
     >
       <Logomark size={size} />
       <span
         className={cn(
-          "select-none text-body font-semibold tracking-tightish",
+          "select-none text-[15px] font-semibold tracking-tight",
           hideTextOnMobile && "hidden sm:inline",
         )}
       >
-        <span className="font-semibold">X&#8209;Hydride</span>{" "}
-        <span className="font-medium text-graphite-300">Lab</span>
+        X&#8209;Hydride
+        <span className="ml-1 font-normal text-graphite-400">Lab</span>
       </span>
     </span>
   );

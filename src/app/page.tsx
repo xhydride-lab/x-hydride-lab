@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { LinkButton } from "@/components/Button";
-import { ProviderPill } from "@/components/Topbar";
 import { ScientificDisclaimer } from "@/components/ScientificDisclaimer";
 import { FrameworkDiagram } from "@/components/FrameworkDiagram";
 import { Logomark, LogomarkLockup } from "@/components/Logomark";
@@ -16,7 +15,7 @@ const LINEAGE = [
     code: "01",
     label: "X-Hydride Lab",
     summary:
-      "Extends the Grokene workflow into hydride-based superconductors with stricter scoring, simulation handoff, and provenance ledger.",
+      "Extends the Grokene workflow into hydride-based superconductors with stricter scoring, simulation handoff, and a provenance ledger.",
   },
 ];
 
@@ -53,7 +52,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-graphite-950 text-graphite-100">
       <LandingNav />
 
-      <main className="mx-auto w-full max-w-[88rem] px-6 sm:px-10 lg:px-12">
+      <main>
         <Hero />
         <Lineage />
         <Framework />
@@ -65,202 +64,262 @@ export default function LandingPage() {
   );
 }
 
+/* ----------------------------- Top nav ----------------------------- */
+
 function LandingNav() {
   return (
-    <header className="sticky top-0 z-30 border-b border-graphite-800 bg-graphite-950/95 backdrop-blur">
-      <div className="mx-auto flex h-14 w-full max-w-[88rem] items-center justify-between px-6 sm:px-10 lg:px-12">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/"
-            className="focus-ring flex items-center gap-2 rounded-sharp"
-            aria-label="X-Hydride Lab home"
-          >
-            <LogomarkLockup />
-          </Link>
-          <span className="hidden h-4 w-px bg-graphite-800 sm:block" />
-          <span className="hidden text-eyebrow sm:inline">
-            Research Preview · v0.1.0
+    <header className="sticky top-0 z-30 border-b border-graphite-800/60 bg-graphite-950/70 backdrop-blur-xl supports-[backdrop-filter]:bg-graphite-950/60">
+      <div className="mx-auto flex h-16 w-full max-w-[88rem] items-center justify-between px-6 sm:px-10 lg:px-14">
+        <Link
+          href="/"
+          className="focus-ring flex items-center gap-2 rounded-md"
+          aria-label="X-Hydride Lab home"
+        >
+          <LogomarkLockup />
+        </Link>
+        <nav className="flex items-center gap-1">
+          <NavLink href="/overview">Overview</NavLink>
+          <NavLink href="/candidates">Generate</NavLink>
+          <NavLink href="/x-score">X-Score</NavLink>
+          <span className="ml-2">
+            <Link
+              href="/overview"
+              className="focus-ring inline-flex h-9 items-center justify-center rounded-full bg-accent-500 px-4 text-[13px] font-medium text-white transition-colors hover:bg-accent-400"
+            >
+              Open Lab
+            </Link>
           </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <ProviderPill demoMode />
-          <Link
-            href="/overview"
-            className="focus-ring hidden rounded-sharp border border-graphite-700 bg-graphite-900 px-3 py-1.5 text-caption text-graphite-100 transition-colors hover:border-graphite-600 sm:inline-block"
-          >
-            Open lab
-          </Link>
-        </div>
+        </nav>
       </div>
     </header>
   );
 }
 
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="focus-ring hidden rounded-full px-3 py-1.5 text-[13px] font-medium text-graphite-300 transition-colors hover:bg-white/[0.04] hover:text-graphite-50 sm:inline-flex"
+    >
+      {children}
+    </Link>
+  );
+}
+
+/* ------------------------------- Hero ------------------------------- */
+
 function Hero() {
   return (
-    <section className="grid grid-cols-1 gap-10 border-b border-graphite-800 py-16 lg:grid-cols-[1.4fr_1fr] lg:py-24">
-      <div className="flex max-w-3xl flex-col gap-6">
-        <div className="flex items-center gap-3 text-eyebrow">
-          <span className="font-mono text-mono-tab text-graphite-500" data-numeric="">
-            00
-          </span>
-          <span className="text-graphite-400">Research manifesto</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Logomark size={48} />
-          <span className="text-eyebrow text-graphite-400">X · Hydride · Lab</span>
-        </div>
-        <h1 className="text-manifesto font-semibold text-graphite-50">
-          A Grok-native discovery platform for hydride-based superconductors.
-        </h1>
-        <p className="text-subtitle text-graphite-300">
-          X-Hydride Lab extends the Grokene framework into structured candidate generation, weighted X-Score evaluation, simulation preparation, and audit-grade provenance. Every output is an exploratory hypothesis intended to enter a rigorous computational and experimental validation pipeline.
-        </p>
-        <div className="mt-2 flex flex-wrap items-center gap-3">
-          <LinkButton href="/overview" size="lg">
-            Launch Lab
-          </LinkButton>
-          <LinkButton href="/x-score" size="lg" variant="secondary">
-            View Framework
-          </LinkButton>
+    <section className="relative overflow-hidden border-b border-graphite-800/80">
+      <div aria-hidden className="hero-glow pointer-events-none absolute inset-0" />
+      <div className="relative mx-auto w-full max-w-[88rem] px-6 pb-28 pt-24 sm:px-10 sm:pt-32 lg:px-14 lg:pt-40">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+          <div className="flex flex-col items-start gap-7">
+            <Logomark size={56} />
+            <h1 className="max-w-3xl text-5xl font-semibold tracking-[-0.03em] text-graphite-50 sm:text-[64px] sm:leading-[1.05] lg:text-[76px]">
+              The Grok-native discovery platform for hydride superconductors.
+            </h1>
+            <p className="max-w-2xl text-subtitle text-graphite-300">
+              X-Hydride Lab extends the Grokene framework into structured
+              candidate generation, weighted X-Score evaluation, simulation
+              preparation, and audit-grade provenance. Every output is an
+              exploratory hypothesis intended to enter a rigorous
+              computational and experimental validation pipeline.
+            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <LinkButton href="/overview" size="lg">
+                Open Lab
+              </LinkButton>
+              <LinkButton href="/x-score" size="lg" variant="secondary">
+                View Framework
+              </LinkButton>
+            </div>
+          </div>
+
+          <aside className="flex flex-col gap-3">
+            <p className="text-eyebrow">Operating parameters</p>
+            <dl className="panel grid grid-cols-1 divide-y divide-graphite-800/80">
+              {[
+                ["Provider", "xAI Grok"],
+                ["Model", "grok-4.3"],
+                ["Output", "json_schema (strict)"],
+                ["Audit hash", "SHA-256"],
+                ["Provenance", "Off-chain ledger"],
+              ].map(([k, v]) => (
+                <div
+                  key={k}
+                  className="flex items-baseline justify-between px-5 py-3"
+                >
+                  <dt className="text-[12.5px] text-graphite-400">{k}</dt>
+                  <dd
+                    className="font-mono text-mono-tab text-[12.5px] text-graphite-100"
+                    data-numeric=""
+                  >
+                    {v}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
         </div>
       </div>
-
-      <aside className="flex flex-col gap-3">
-        <p className="text-eyebrow">Operating parameters</p>
-        <dl className="panel grid grid-cols-1 divide-y divide-graphite-800">
-          {[
-            ["Default provider", "xAI Grok"],
-            ["Default model", "grok-4.3"],
-            ["Output format", "json_schema (strict)"],
-            ["Audit hash", "SHA-256"],
-            ["Demo mode", "Enabled when API key absent"],
-          ].map(([k, v]) => (
-            <div key={k} className="flex items-baseline justify-between px-4 py-2.5">
-              <dt className="text-eyebrow">{k}</dt>
-              <dd className="font-mono text-mono-tab text-caption text-graphite-100" data-numeric="">
-                {v}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </aside>
     </section>
   );
 }
+
+/* ----------------------------- Lineage ----------------------------- */
 
 function Lineage() {
   return (
-    <section className="border-b border-graphite-800 py-14">
-      <header className="mb-6 flex items-baseline gap-3">
-        <span className="font-mono text-mono-tab text-eyebrow text-graphite-500" data-numeric="">
-          01
-        </span>
-        <h2 className="text-section font-medium text-graphite-50">From Grokene to X-Hydride</h2>
-      </header>
-      <div className="grid grid-cols-1 divide-y divide-graphite-800 border border-graphite-800 lg:grid-cols-2 lg:divide-x lg:divide-y-0">
-        {LINEAGE.map((entry) => (
-          <article key={entry.code} className="px-6 py-6">
-            <div className="flex items-baseline gap-3">
-              <span
-                className="font-mono text-mono-tab text-eyebrow text-accent-300"
-                data-numeric=""
-              >
-                {entry.code}
-              </span>
-              <h3 className="text-section font-medium text-graphite-50">
-                {entry.label}
-              </h3>
-            </div>
-            <p className="mt-3 max-w-prose text-body leading-relaxed text-graphite-300">
-              {entry.summary}
-            </p>
-          </article>
-        ))}
+    <section className="border-b border-graphite-800/80 py-24">
+      <div className="mx-auto w-full max-w-[88rem] px-6 sm:px-10 lg:px-14">
+        <SectionHeading
+          eyebrow="Lineage"
+          title="From Grokene to X-Hydride."
+          description="X-Hydride Lab inherits Grokene's discipline and extends it to the rigor required by hydride superconductor research."
+        />
+        <div className="mt-10 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-graphite-800 lg:grid-cols-2">
+          {LINEAGE.map((entry) => (
+            <article key={entry.code} className="bg-graphite-925 px-8 py-9">
+              <div className="flex items-baseline gap-3">
+                <span
+                  className="font-mono text-mono-tab text-[12px] text-accent-300"
+                  data-numeric=""
+                >
+                  {entry.code}
+                </span>
+                <h3 className="text-section font-semibold text-graphite-50">
+                  {entry.label}
+                </h3>
+              </div>
+              <p className="mt-4 max-w-prose text-body leading-relaxed text-graphite-300">
+                {entry.summary}
+              </p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
+/* ---------------------------- Framework ---------------------------- */
+
 function Framework() {
   return (
-    <section className="border-b border-graphite-800 py-14">
-      <header className="mb-6 flex items-baseline gap-3">
-        <span className="font-mono text-mono-tab text-eyebrow text-graphite-500" data-numeric="">
-          02
-        </span>
-        <h2 className="text-section font-medium text-graphite-50">Discovery framework</h2>
-      </header>
-      <FrameworkDiagram />
+    <section className="border-b border-graphite-800/80 py-24">
+      <div className="mx-auto w-full max-w-[88rem] px-6 sm:px-10 lg:px-14">
+        <SectionHeading
+          eyebrow="Framework"
+          title="A discovery pipeline you can audit."
+          description="Inputs feed candidate generation; validation gates govern progression. Every artifact in between is hashed and recorded."
+        />
+        <div className="mt-10">
+          <FrameworkDiagram />
+        </div>
+      </div>
     </section>
   );
 }
+
+/* ----------------------------- Workflow ----------------------------- */
 
 function Workflow() {
   return (
-    <section className="border-b border-graphite-800 py-14">
-      <header className="mb-6 flex items-baseline gap-3">
-        <span className="font-mono text-mono-tab text-eyebrow text-graphite-500" data-numeric="">
-          03
-        </span>
-        <h2 className="text-section font-medium text-graphite-50">Scientific workflow</h2>
-      </header>
-      <ol className="grid grid-cols-1 divide-y divide-graphite-800 border border-graphite-800 md:grid-cols-2 lg:grid-cols-5 lg:divide-x lg:divide-y-0">
-        {WORKFLOW.map((step) => (
-          <li key={step.code} className="flex flex-col gap-2 px-5 py-5">
-            <span
-              className="font-mono text-mono-tab text-eyebrow text-accent-300"
-              data-numeric=""
-            >
-              {step.code}
-            </span>
-            <p className="text-body font-medium tracking-tightish text-graphite-50">
-              {step.label}
-            </p>
-            <p className="text-caption leading-relaxed text-graphite-400">
-              {step.body}
-            </p>
-          </li>
-        ))}
-      </ol>
+    <section className="border-b border-graphite-800/80 py-24">
+      <div className="mx-auto w-full max-w-[88rem] px-6 sm:px-10 lg:px-14">
+        <SectionHeading
+          eyebrow="Workflow"
+          title="Five disciplined steps."
+          description="Generate, score, prepare, document, anchor. Each step produces a reviewable artifact."
+        />
+        <ol className="mt-10 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-graphite-800 md:grid-cols-2 lg:grid-cols-5">
+          {WORKFLOW.map((step) => (
+            <li key={step.code} className="flex flex-col gap-3 bg-graphite-925 px-6 py-7">
+              <span
+                className="font-mono text-mono-tab text-[12px] text-accent-300"
+                data-numeric=""
+              >
+                {step.code}
+              </span>
+              <p className="text-[15px] font-semibold tracking-tight text-graphite-50">
+                {step.label}
+              </p>
+              <p className="text-[13px] leading-relaxed text-graphite-400">
+                {step.body}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
   );
 }
+
+/* ---------------------------- Validation ---------------------------- */
 
 function Validation() {
   return (
-    <section className="border-b border-graphite-800 py-14">
-      <header className="mb-6 flex items-baseline gap-3">
-        <span className="font-mono text-mono-tab text-eyebrow text-graphite-500" data-numeric="">
-          04
-        </span>
-        <h2 className="text-section font-medium text-graphite-50">Validation disclaimer</h2>
-      </header>
-      <ScientificDisclaimer />
+    <section className="border-b border-graphite-800/80 py-24">
+      <div className="mx-auto w-full max-w-[88rem] px-6 sm:px-10 lg:px-14">
+        <SectionHeading
+          eyebrow="Validation"
+          title="Hypothesis, not claim."
+        />
+        <div className="mt-8">
+          <ScientificDisclaimer />
+        </div>
+      </div>
     </section>
   );
 }
 
+/* ----------------------------- Footer ----------------------------- */
+
 function FooterBlock() {
   return (
-    <footer className="flex flex-col gap-4 py-10 text-caption text-graphite-500 sm:flex-row sm:items-center sm:justify-between">
-      <p>
-        © {new Date().getFullYear()} X-Hydride Lab · Research preview · Grok-native discovery
-      </p>
-      <nav className="flex flex-wrap gap-5 text-graphite-400">
-        <Link className="focus-ring rounded-sharp hover:text-graphite-100" href="/overview">
-          Overview
-        </Link>
-        <Link className="focus-ring rounded-sharp hover:text-graphite-100" href="/candidates">
-          Candidate Generator
-        </Link>
-        <Link className="focus-ring rounded-sharp hover:text-graphite-100" href="/x-score">
-          X-Score Lab
-        </Link>
-        <Link className="focus-ring rounded-sharp hover:text-graphite-100" href="/audit">
-          Audit Log
-        </Link>
-      </nav>
+    <footer className="mx-auto w-full max-w-[88rem] px-6 py-12 text-[12.5px] text-graphite-500 sm:px-10 lg:px-14">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <p>© {new Date().getFullYear()} X-Hydride Lab</p>
+        <nav className="flex flex-wrap gap-6 text-graphite-400">
+          <Link className="focus-ring rounded-md hover:text-graphite-100" href="/overview">
+            Overview
+          </Link>
+          <Link className="focus-ring rounded-md hover:text-graphite-100" href="/candidates">
+            Generate
+          </Link>
+          <Link className="focus-ring rounded-md hover:text-graphite-100" href="/x-score">
+            X-Score
+          </Link>
+          <Link className="focus-ring rounded-md hover:text-graphite-100" href="/audit">
+            Provenance
+          </Link>
+        </nav>
+      </div>
     </footer>
+  );
+}
+
+/* ---------------------------- Helpers ---------------------------- */
+
+function SectionHeading({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow: string;
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="flex max-w-3xl flex-col gap-3">
+      <p className="text-eyebrow">{eyebrow}</p>
+      <h2 className="text-[40px] font-semibold tracking-[-0.025em] text-graphite-50 sm:text-[48px] sm:leading-[1.1]">
+        {title}
+      </h2>
+      {description ? (
+        <p className="text-subtitle text-graphite-400">{description}</p>
+      ) : null}
+    </div>
   );
 }

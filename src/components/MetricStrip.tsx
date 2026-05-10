@@ -29,11 +29,11 @@ export function MetricStrip({
       )}
     >
       {metrics.map((m, i) => (
-        <div key={`${m.label}-${i}`} className="flex flex-col gap-1 px-5 py-4">
+        <div key={`${m.label}-${i}`} className="flex flex-col gap-2 px-6 py-5">
           <p className="text-eyebrow">{m.label}</p>
-          <div className="flex items-baseline gap-1">
+          <div className="flex items-baseline gap-1.5">
             <p
-              className="font-mono text-mono-tab text-2xl tracking-tightish text-graphite-50"
+              className="font-mono text-mono-tab text-[28px] font-semibold tracking-tight text-graphite-50"
               data-numeric=""
             >
               {m.value}

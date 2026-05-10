@@ -78,15 +78,17 @@ const config: Config = {
         ],
       },
       fontSize: {
-        // Tighter, scientific scale.
-        eyebrow: ["0.6875rem", { lineHeight: "1rem", letterSpacing: "0.16em" }],
-        caption: ["0.75rem", { lineHeight: "1.1rem" }],
-        body: ["0.875rem", { lineHeight: "1.45rem" }],
-        subtitle: ["1rem", { lineHeight: "1.6rem", letterSpacing: "-0.008em" }],
-        section: ["1.125rem", { lineHeight: "1.6rem", letterSpacing: "-0.012em" }],
-        title: ["1.375rem", { lineHeight: "1.85rem", letterSpacing: "-0.018em" }],
-        display: ["2.125rem", { lineHeight: "2.4rem", letterSpacing: "-0.022em" }],
-        manifesto: ["3rem", { lineHeight: "3.25rem", letterSpacing: "-0.026em" }],
+        // Apple-style hierarchy: clean steps, tight tracking on display
+        // sizes, generous line-height on body sizes.
+        eyebrow: ["0.6875rem", { lineHeight: "1rem", letterSpacing: "0.14em" }],
+        caption: ["0.8125rem", { lineHeight: "1.15rem" }],
+        body: ["0.9375rem", { lineHeight: "1.55rem" }],
+        subtitle: ["1.0625rem", { lineHeight: "1.7rem", letterSpacing: "-0.008em" }],
+        section: ["1.25rem", { lineHeight: "1.75rem", letterSpacing: "-0.018em" }],
+        title: ["1.625rem", { lineHeight: "2.1rem", letterSpacing: "-0.022em" }],
+        display: ["2.625rem", { lineHeight: "3rem", letterSpacing: "-0.028em" }],
+        manifesto: ["3.75rem", { lineHeight: "4.05rem", letterSpacing: "-0.032em" }],
+        hero: ["5rem", { lineHeight: "5.2rem", letterSpacing: "-0.04em" }],
       },
       letterSpacing: {
         tightish: "-0.012em",
