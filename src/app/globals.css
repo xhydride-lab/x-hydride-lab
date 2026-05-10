@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: theme("colors.graphite.950");
+  color: theme("colors.graphite.100");
+  font-feature-settings: "ss01", "cv11", "tnum", "calt";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  ::selection {
+    background-color: rgba(44, 155, 255, 0.32);
+    color: #ffffff;
+  }
+
+  input,
+  textarea,
+  select,
+  [data-numeric] {
+    font-feature-settings: "tnum", "cv11";
+  }
+
+  hr {
+    border-color: theme("colors.graphite.800");
+  }
+}
+
+@layer components {
+  /* ----------------------------------------------------------------
+   * Surface vocabulary
+   * ----------------------------------------------------------------
+   * Three flat surfaces, no shadows. Differentiation is achieved
+   * through value, not depth. Most pages should use `panel` (square,
+   * hairline border) instead of decorative cards.
+   */
+  .panel {
+    background-color: theme("colors.graphite.925");
+    border: 1px solid theme("colors.graphite.800");
+  }
+
+  .panel-elevated {
+    background-color: theme("colors.graphite.900");
+    border: 1px solid theme("colors.graphite.800");
+  }
+
+  .panel-flat {
+    background-color: transparent;
+    border: 1px solid theme("colors.graphite.800");
+  }
+
+  /* Soft inline surface, used inside panels for individual records. */
+  .panel-inset {
+    background-color: theme("colors.graphite.900");
+    border: 1px solid theme("colors.graphite.800");
+  }
+
+  /* ----------------------------------------------------------------
+   * Hairline dividers
+   * ---------------------------------------------------------------- */
+  .hairline {
+    border-top: 1px solid theme("colors.graphite.800");
+  }
+
+  .hairline-b {
+    border-bottom: 1px solid theme("colors.graphite.800");
+  }
+
+  /* ----------------------------------------------------------------
+   * Typography
+   * ---------------------------------------------------------------- */
+  .text-eyebrow {
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: theme("colors.graphite.400");
+    font-weight: 500;
+  }
+
+  .text-eyebrow-strong {
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: theme("colors.graphite.200");
+    font-weight: 600;
+  }
+
+  .text-mono-tab {
+    font-family: theme("fontFamily.mono");
+    font-feature-settings: "tnum", "cv11";
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ----------------------------------------------------------------
+   * Document layouts (preprint, dossier)
+   * ---------------------------------------------------------------- */
+  .doc-prose {
+    color: theme("colors.graphite.100");
+    line-height: 1.7;
+    font-size: 0.9375rem;
+  }
+  .doc-prose p + p {
+    margin-top: 0.85rem;
+  }
+  .doc-prose h2 {
+    color: theme("colors.graphite.50");
+    font-size: 1rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ----------------------------------------------------------------
+   * Ledger / scientific table rows
+   * ---------------------------------------------------------------- */
+  .ledger-row {
+    border-bottom: 1px solid theme("colors.graphite.800");
+  }
+  .ledger-row:last-child {
+    border-bottom: none;
+  }
+
+  /* ----------------------------------------------------------------
+   * Focus state — single canonical ring.
+   * ---------------------------------------------------------------- */
+  .focus-ring:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 1px theme("colors.graphite.950"),
+      0 0 0 3px theme("colors.accent.500");
+  }
+
+  /* ----------------------------------------------------------------
+   * Field controls — consistent across forms
+   * ---------------------------------------------------------------- */
+  .field-input {
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    background-color: theme("colors.graphite.900");
+    border: 1px solid theme("colors.graphite.800");
+    color: theme("colors.graphite.100");
+    font-size: 0.875rem;
+    border-radius: 2px;
+  }
+  .field-input:hover {
+    border-color: theme("colors.graphite.700");
+  }
+  .field-input:focus-visible {
+    outline: none;
+    border-color: theme("colors.accent.500");
+    box-shadow: 0 0 0 1px theme("colors.accent.500");
+  }
+
+  .field-textarea {
+    padding: 0.5rem 0.75rem;
+    background-color: theme("colors.graphite.900");
+    border: 1px solid theme("colors.graphite.800");
+    color: theme("colors.graphite.100");
+    font-size: 0.875rem;
+    border-radius: 2px;
+    line-height: 1.4rem;
+  }
+  .field-textarea:focus-visible {
+    outline: none;
+    border-color: theme("colors.accent.500");
+    box-shadow: 0 0 0 1px theme("colors.accent.500");
+  }
+}
+
+/*
+ * Restrained scientific scrollbar — purely structural.
+ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: theme("colors.graphite.950");
+}
+::-webkit-scrollbar-thumb {
+  background: theme("colors.graphite.800");
+  border-radius: 0;
+  border: 2px solid theme("colors.graphite.950");
+}
+::-webkit-scrollbar-thumb:hover {
+  background: theme("colors.graphite.700");
+}

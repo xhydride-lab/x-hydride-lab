@@ -1,0 +1,1424 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>X-Hydride Lab — Research Console Preview</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              graphite: {
+                50:"#f4f6fa",100:"#e5e8ee",200:"#c7ccd8",300:"#9aa1b3",
+                400:"#6f7689",500:"#4d5366",600:"#363c4e",700:"#262b3b",
+                800:"#1a1f2c",850:"#141823",900:"#0e1119",925:"#0b0e15",
+                950:"#070910"
+              },
+              accent: {
+                50:"#eaf6ff",100:"#cfeaff",200:"#9bd4ff",300:"#5fb9ff",
+                400:"#2c9bff",500:"#0a7cf2",600:"#0561c8",700:"#064c9b",
+                800:"#0a3d78",900:"#0d3160"
+              },
+            },
+            fontFamily: {
+              sans: ["ui-sans-serif","system-ui","-apple-system","BlinkMacSystemFont","Inter","sans-serif"],
+              mono: ["ui-monospace","SFMono-Regular","Menlo","Monaco","Consolas","monospace"],
+            },
+            letterSpacing: {
+              tightish: "-0.012em",
+              institutional: "0.16em",
+            },
+            borderRadius: {
+              sharp: "2px",
+              soft: "4px",
+            },
+            fontSize: {
+              eyebrow:["0.6875rem",{lineHeight:"1rem",letterSpacing:"0.16em"}],
+              caption:["0.75rem",{lineHeight:"1.1rem"}],
+              body:["0.875rem",{lineHeight:"1.45rem"}],
+              subtitle:["1rem",{lineHeight:"1.6rem",letterSpacing:"-0.008em"}],
+              section:["1.125rem",{lineHeight:"1.6rem",letterSpacing:"-0.012em"}],
+              title:["1.375rem",{lineHeight:"1.85rem",letterSpacing:"-0.018em"}],
+              display:["2.125rem",{lineHeight:"2.4rem",letterSpacing:"-0.022em"}],
+              manifesto:["3rem",{lineHeight:"3.25rem",letterSpacing:"-0.026em"}],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        background: #070910;
+        color: #e5e8ee;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Inter, sans-serif;
+        font-feature-settings: "ss01","cv11","tnum","calt";
+        -webkit-font-smoothing: antialiased;
+        letter-spacing: -0.012em;
+      }
+      .panel {
+        background-color: #0b0e15;
+        border: 1px solid #1a1f2c;
+      }
+      .panel-elevated {
+        background-color: #0e1119;
+        border: 1px solid #1a1f2c;
+      }
+      .panel-flat {
+        background-color: transparent;
+        border: 1px solid #1a1f2c;
+      }
+      .hairline { border-top: 1px solid #1a1f2c; }
+      .hairline-b { border-bottom: 1px solid #1a1f2c; }
+      .text-eyebrow {
+        font-size: 0.6875rem;
+        line-height: 1rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #6f7689;
+        font-weight: 500;
+      }
+      .text-mono-tab {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-feature-settings: "tnum","cv11";
+        font-variant-numeric: tabular-nums;
+      }
+      .field-input {
+        height: 2.5rem;
+        padding: 0 0.75rem;
+        background-color: #0e1119;
+        border: 1px solid #1a1f2c;
+        color: #e5e8ee;
+        font-size: 0.875rem;
+        border-radius: 2px;
+      }
+      .field-input:focus { outline: none; border-color: #0a7cf2; box-shadow: 0 0 0 1px #0a7cf2; }
+      [data-page]:not(.active) { display: none; }
+      .nav-active {
+        background-color: #0e1119;
+        color: #f4f6fa;
+        border-left-color: #2c9bff !important;
+      }
+      .nav-active .nav-code { color: #5fb9ff !important; }
+      ::-webkit-scrollbar { width: 10px; height: 10px; }
+      ::-webkit-scrollbar-track { background: #070910; }
+      ::-webkit-scrollbar-thumb {
+        background: #1a1f2c;
+        border-radius: 0;
+        border: 2px solid #070910;
+      }
+      ::-webkit-scrollbar-thumb:hover { background: #262b3b; }
+      .doc-prose p + p { margin-top: 0.85rem; }
+      .doc-prose p { line-height: 1.7; font-size: 0.9375rem; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-graphite-950 text-graphite-100">
+    <!-- ============ TOP BAR ============ -->
+    <header class="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-graphite-800 bg-graphite-950/95 px-6 backdrop-blur">
+      <div class="flex items-center gap-4">
+        <a href="#" data-link="landing" class="flex items-center gap-2 text-body font-semibold tracking-tightish text-graphite-50">
+          <svg viewBox="0 0 48 48" width="22" height="22" fill="none" aria-label="X-Hydride Lab mark">
+            <defs>
+              <radialGradient id="xh-glow-tb" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(95,185,255,0.55)"/>
+                <stop offset="60%" stop-color="rgba(95,185,255,0.18)"/>
+                <stop offset="100%" stop-color="rgba(95,185,255,0)"/>
+              </radialGradient>
+            </defs>
+            <circle cx="24" cy="24" r="22" fill="url(#xh-glow-tb)"/>
+            <g stroke="#9bd4ff" stroke-width="2" stroke-linecap="square">
+              <polyline points="24,24 21,24 21,21 18,21 18,18 14,18 14,14 10,14 10,10"/>
+              <polyline points="24,24 27,24 27,21 30,21 30,18 34,18 34,14 38,14 38,10"/>
+              <polyline points="24,24 27,24 27,27 30,27 30,30 34,30 34,34 38,34 38,38"/>
+              <polyline points="24,24 21,24 21,27 18,27 18,30 14,30 14,34 10,34 10,38"/>
+            </g>
+            <g fill="#cfeaff">
+              <rect x="9" y="9" width="2" height="2"/><rect x="37" y="9" width="2" height="2"/>
+              <rect x="37" y="37" width="2" height="2"/><rect x="9" y="37" width="2" height="2"/>
+            </g>
+            <circle cx="24" cy="24" r="3" fill="#0a0c13" stroke="#9bd4ff" stroke-width="1.4"/>
+            <circle cx="24" cy="24" r="1.2" fill="#cfeaff"/>
+          </svg>
+          <span>X&#8209;Hydride <span class="font-medium text-graphite-300">Lab</span></span>
+        </a>
+        <span class="hidden h-4 w-px bg-graphite-800 sm:block"></span>
+        <span class="hidden text-eyebrow sm:inline">Research Console</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="hidden font-mono text-eyebrow text-graphite-500 sm:inline">v0.1.0</span>
+        <span class="hidden h-4 w-px bg-graphite-800 sm:block"></span>
+        <div class="flex items-center gap-2 rounded-sharp border border-graphite-700 bg-graphite-900 px-2 py-0.5 text-eyebrow text-graphite-300">
+          <span class="h-1.5 w-1.5 rounded-full bg-graphite-400"></span>
+          <span>Demo Mode</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex">
+      <!-- ============ SIDEBAR ============ -->
+      <aside class="hidden w-64 shrink-0 border-r border-graphite-800 lg:flex lg:flex-col">
+        <div class="border-b border-graphite-800 px-5 py-5">
+          <p class="text-eyebrow">Workspace</p>
+          <p class="mt-2 text-body font-medium tracking-tightish text-graphite-50">Hydride Discovery Console</p>
+          <p class="mt-1 text-xs text-graphite-500">Grok-native research environment</p>
+        </div>
+        <nav class="flex-1 px-2 py-3">
+          <ol class="flex flex-col gap-px" id="nav-list"></ol>
+        </nav>
+        <div class="border-t border-graphite-800 px-5 py-4">
+          <p class="text-eyebrow">Scientific notice</p>
+          <p class="mt-1.5 text-xs leading-relaxed text-graphite-500">All outputs are exploratory hypotheses. Validation via DFT, DFPT, EPW, Eliashberg, RPA, and experiment is required before any claim can be made.</p>
+        </div>
+      </aside>
+
+      <!-- ============ MAIN ============ -->
+      <main class="min-h-[calc(100vh-3.5rem)] flex-1 px-6 pb-24 pt-10 sm:px-10 lg:px-12">
+        <div class="mx-auto w-full max-w-[88rem]">
+
+          <!-- =========== LANDING =========== -->
+          <section data-page="landing" class="active">
+            <section class="grid grid-cols-1 gap-10 border-b border-graphite-800 py-16 lg:grid-cols-[1.4fr_1fr]">
+              <div class="flex max-w-3xl flex-col gap-6">
+                <div class="flex items-center gap-3 text-eyebrow">
+                  <span class="font-mono text-mono-tab text-graphite-500">00</span>
+                  <span class="text-graphite-400">Research manifesto</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <svg viewBox="0 0 48 48" width="48" height="48" fill="none" aria-label="X-Hydride Lab">
+                    <defs>
+                      <radialGradient id="xh-glow-hero" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="rgba(95,185,255,0.55)"/>
+                        <stop offset="60%" stop-color="rgba(95,185,255,0.18)"/>
+                        <stop offset="100%" stop-color="rgba(95,185,255,0)"/>
+                      </radialGradient>
+                    </defs>
+                    <circle cx="24" cy="24" r="22" fill="url(#xh-glow-hero)"/>
+                    <g stroke="#9bd4ff" stroke-width="2" stroke-linecap="square">
+                      <polyline points="24,24 21,24 21,21 18,21 18,18 14,18 14,14 10,14 10,10"/>
+                      <polyline points="24,24 27,24 27,21 30,21 30,18 34,18 34,14 38,14 38,10"/>
+                      <polyline points="24,24 27,24 27,27 30,27 30,30 34,30 34,34 38,34 38,38"/>
+                      <polyline points="24,24 21,24 21,27 18,27 18,30 14,30 14,34 10,34 10,38"/>
+                    </g>
+                    <g fill="#cfeaff">
+                      <rect x="9" y="9" width="2" height="2"/><rect x="37" y="9" width="2" height="2"/>
+                      <rect x="37" y="37" width="2" height="2"/><rect x="9" y="37" width="2" height="2"/>
+                    </g>
+                    <circle cx="24" cy="24" r="3" fill="#0a0c13" stroke="#9bd4ff" stroke-width="1.4"/>
+                    <circle cx="24" cy="24" r="1.2" fill="#cfeaff"/>
+                  </svg>
+                  <span class="text-eyebrow text-graphite-400">X · Hydride · Lab</span>
+                </div>
+                <h1 class="text-manifesto font-semibold text-graphite-50">A Grok-native discovery platform for hydride-based superconductors.</h1>
+                <p class="text-subtitle text-graphite-300">X-Hydride Lab extends the Grokene framework into structured candidate generation, weighted X-Score evaluation, simulation preparation, and audit-grade provenance. Every output is an exploratory hypothesis intended to enter a rigorous computational and experimental validation pipeline.</p>
+                <div class="mt-2 flex flex-wrap items-center gap-3">
+                  <a href="#" data-link="overview" class="inline-flex h-11 items-center justify-center rounded-sharp border border-accent-500/60 bg-accent-600 px-5 text-body font-medium text-white hover:bg-accent-500">Launch Lab</a>
+                  <a href="#" data-link="x-score" class="inline-flex h-11 items-center justify-center rounded-sharp border border-graphite-700 bg-graphite-900 px-5 text-body font-medium text-graphite-100 hover:border-graphite-600">View Framework</a>
+                </div>
+              </div>
+              <aside class="flex flex-col gap-3">
+                <p class="text-eyebrow">Operating parameters</p>
+                <dl class="panel grid grid-cols-1 divide-y divide-graphite-800" id="op-params"></dl>
+              </aside>
+            </section>
+
+            <section class="border-b border-graphite-800 py-14">
+              <header class="mb-6 flex items-baseline gap-3">
+                <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">01</span>
+                <h2 class="text-section font-medium text-graphite-50">From Grokene to X-Hydride</h2>
+              </header>
+              <div class="grid grid-cols-1 divide-y divide-graphite-800 border border-graphite-800 lg:grid-cols-2 lg:divide-x lg:divide-y-0" id="lineage"></div>
+            </section>
+
+            <section class="border-b border-graphite-800 py-14">
+              <header class="mb-6 flex items-baseline gap-3">
+                <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">02</span>
+                <h2 class="text-section font-medium text-graphite-50">Discovery framework</h2>
+              </header>
+              <figure class="panel-flat overflow-hidden bg-graphite-925 px-6 py-8" id="framework"></figure>
+            </section>
+
+            <section class="border-b border-graphite-800 py-14">
+              <header class="mb-6 flex items-baseline gap-3">
+                <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">03</span>
+                <h2 class="text-section font-medium text-graphite-50">Scientific workflow</h2>
+              </header>
+              <ol class="grid grid-cols-1 divide-y divide-graphite-800 border border-graphite-800 md:grid-cols-2 lg:grid-cols-5 lg:divide-x lg:divide-y-0" id="wf-steps"></ol>
+            </section>
+
+            <section class="border-b border-graphite-800 py-14">
+              <header class="mb-6 flex items-baseline gap-3">
+                <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">04</span>
+                <h2 class="text-section font-medium text-graphite-50">Validation disclaimer</h2>
+              </header>
+              <aside class="panel-flat px-5 py-4">
+                <p class="text-eyebrow text-graphite-300">Scientific disclaimer</p>
+                <p class="mt-2 max-w-3xl text-body leading-relaxed text-graphite-200">AI-generated research candidates are exploratory hypotheses and require DFT, DFPT, EPW, Eliashberg, RPA, and experimental validation before scientific claims can be made.</p>
+              </aside>
+            </section>
+          </section>
+
+          <!-- =========== OVERVIEW =========== -->
+          <section data-page="overview">
+            <div class="mb-10 flex flex-col gap-5 border-b border-graphite-800 pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex max-w-3xl flex-col gap-2">
+                <p class="text-eyebrow">01 · Overview</p>
+                <h1 class="text-display font-semibold text-graphite-50">Research Console</h1>
+                <p class="text-body text-graphite-400">Live view of candidate generation, scoring, and audit activity for the current X-Hydride Lab session.</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <a href="#" data-link="candidates" class="inline-flex h-9 items-center justify-center rounded-sharp border border-accent-500/60 bg-accent-600 px-4 text-body font-medium text-white hover:bg-accent-500">New candidates</a>
+                <a href="#" data-link="x-score" class="inline-flex h-9 items-center justify-center rounded-sharp border border-graphite-700 bg-graphite-900 px-4 text-body font-medium text-graphite-100 hover:border-graphite-600">X-Score Lab</a>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-12">
+              <div class="panel grid grid-cols-2 divide-x divide-graphite-800 sm:grid-cols-4" id="metrics"></div>
+
+              <section class="flex flex-col gap-3">
+                <header class="flex flex-col gap-2 border-b border-graphite-800 pb-3 sm:flex-row sm:items-end sm:justify-between">
+                  <div class="flex items-baseline gap-3">
+                    <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">02</span>
+                    <div>
+                      <p class="text-eyebrow">Pipeline</p>
+                      <h2 class="text-section font-medium text-graphite-50">Discovery pipeline status</h2>
+                    </div>
+                  </div>
+                </header>
+                <ol class="panel-flat grid grid-cols-2 divide-x divide-graphite-800 sm:grid-cols-3 lg:grid-cols-6" id="pipeline"></ol>
+              </section>
+
+              <section class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <div class="lg:col-span-2">
+                  <header class="mb-3 flex flex-col gap-2 border-b border-graphite-800 pb-3 sm:flex-row sm:items-end sm:justify-between">
+                    <div class="flex items-baseline gap-3">
+                      <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">03</span>
+                      <div>
+                        <p class="text-eyebrow">Queue</p>
+                        <h2 class="text-section font-medium text-graphite-50">Validation queue</h2>
+                      </div>
+                    </div>
+                  </header>
+                  <ol class="panel divide-y divide-graphite-800" id="queue"></ol>
+                </div>
+                <div class="flex flex-col gap-3">
+                  <header class="mb-3 flex flex-col gap-2 border-b border-graphite-800 pb-3 sm:flex-row sm:items-end sm:justify-between">
+                    <div class="flex items-baseline gap-3">
+                      <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">04</span>
+                      <div>
+                        <p class="text-eyebrow">Provenance</p>
+                        <h2 class="text-section font-medium text-graphite-50">Recent audits</h2>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="panel" id="audit-mini">
+                    <p class="px-5 py-4 text-xs text-graphite-400">No audit records yet. Audit entries are produced when a candidate report and simulation bundle are generated.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                  <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">05</span>
+                  <div>
+                    <p class="text-eyebrow">Registry</p>
+                    <h2 class="text-section font-medium text-graphite-50">Recent candidates</h2>
+                  </div>
+                </header>
+                <div class="panel overflow-hidden">
+                  <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-left">
+                      <thead class="hairline-b bg-graphite-900/60 text-eyebrow">
+                        <tr>
+                          <th class="px-5 py-2.5 font-medium">#</th>
+                          <th class="px-5 py-2.5 font-medium">Candidate</th>
+                          <th class="px-5 py-2.5 font-medium">Family</th>
+                          <th class="px-5 py-2.5 font-medium">Pressure</th>
+                          <th class="px-5 py-2.5 font-medium">Status</th>
+                          <th class="px-5 py-2.5 text-right font-medium">X-Score</th>
+                        </tr>
+                      </thead>
+                      <tbody id="candidates-table"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <aside class="border border-amber-700/40 bg-amber-900/15 px-4 py-3">
+                <p class="text-eyebrow text-amber-200">Validation required</p>
+                <p class="mt-1 text-xs leading-relaxed text-amber-100/85">AI-generated research candidates are exploratory hypotheses and require DFT, DFPT, EPW, Eliashberg, RPA, and experimental validation before scientific claims can be made.</p>
+              </aside>
+            </div>
+          </section>
+
+          <!-- =========== CANDIDATE DETAIL =========== -->
+          <section data-page="dossier">
+            <div class="mb-10 flex flex-col gap-5 border-b border-graphite-800 pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex max-w-3xl flex-col gap-2">
+                <p class="text-eyebrow">02 · Candidate dossier</p>
+                <h1 class="text-display font-semibold text-graphite-50">B-C-H layered hydride candidate</h1>
+                <p class="text-body text-graphite-400">Alternating boron-carbon honeycomb layers with hydrogen interstitials forming covalent B-H and C-H bonds.</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <a href="#" data-link="candidates" class="inline-flex h-9 items-center justify-center rounded-sharp border border-graphite-700 bg-graphite-900 px-4 text-body font-medium text-graphite-100">Back to generator</a>
+                <a href="#" data-link="simulation" class="inline-flex h-9 items-center justify-center rounded-sharp border border-accent-500/60 bg-accent-600 px-4 text-body font-medium text-white">Open Simulation Builder</a>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-12">
+              <section>
+                <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                  <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">01</span>
+                  <div>
+                    <p class="text-eyebrow">Frontmatter</p>
+                    <h2 class="text-section font-medium text-graphite-50">Dossier metadata</h2>
+                  </div>
+                </header>
+                <div class="panel">
+                  <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" id="dossier-meta"></dl>
+                </div>
+              </section>
+
+              <section class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <div>
+                  <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                    <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">02</span>
+                    <div>
+                      <p class="text-eyebrow">Hypothesis</p>
+                      <h2 class="text-section font-medium text-graphite-50">Structural hypothesis & rationale</h2>
+                    </div>
+                  </header>
+                  <article class="panel divide-y divide-graphite-800" id="hyp-fields"></article>
+                </div>
+                <div>
+                  <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                    <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">03</span>
+                    <div>
+                      <p class="text-eyebrow">Risks</p>
+                      <h2 class="text-section font-medium text-graphite-50">Stability & limitations</h2>
+                    </div>
+                  </header>
+                  <article class="panel divide-y divide-graphite-800">
+                    <div class="px-5 py-4">
+                      <p class="text-eyebrow">Stability risk</p>
+                      <p class="mt-1.5 text-body leading-relaxed text-graphite-100">Layered framework may decompose into BC graphite-like sheets and H2 at ambient pressure.</p>
+                    </div>
+                    <div class="px-5 py-4">
+                      <p class="text-eyebrow">Phonon stability risk</p>
+                      <p class="mt-1.5 text-body leading-relaxed text-graphite-100">Interstitial H sites may produce imaginary modes if displacement landscape is anharmonic.</p>
+                    </div>
+                    <div class="border border-amber-700/40 bg-amber-900/15 px-5 py-4">
+                      <p class="text-eyebrow text-amber-200">Limitations</p>
+                      <ul class="mt-2 list-disc space-y-1 pl-5 text-xs leading-relaxed text-amber-100/85">
+                        <li>Composition is illustrative only.</li>
+                        <li>No experimental synthesis has been attempted.</li>
+                        <li>Stability above 5 GPa is unverified.</li>
+                      </ul>
+                    </div>
+                  </article>
+                </div>
+              </section>
+
+              <section>
+                <header class="mb-3 flex flex-col gap-2 border-b border-graphite-800 pb-3 sm:flex-row sm:items-end sm:justify-between">
+                  <div class="flex items-baseline gap-3">
+                    <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">04</span>
+                    <div>
+                      <p class="text-eyebrow">Evidence</p>
+                      <h2 class="text-section font-medium text-graphite-50">X-Score evidence panel</h2>
+                      <p class="mt-1 text-xs text-graphite-400">Recommended next validation step: DFT relaxation.</p>
+                    </div>
+                  </div>
+                  <span class="inline-flex items-center gap-2 rounded-sharp border border-accent-700 bg-accent-900/30 h-7 px-2.5 text-xs font-mono text-mono-tab">
+                    <span class="text-graphite-400">X-Score</span><span class="font-semibold text-accent-200">72</span><span class="text-graphite-600">·</span><span class="text-eyebrow text-graphite-400">Promising</span>
+                  </span>
+                </header>
+                <div class="panel grid grid-cols-1 lg:grid-cols-[1.2fr_1fr]">
+                  <div class="border-b border-graphite-800 lg:border-b-0 lg:border-r">
+                    <div class="hairline-b grid grid-cols-12 px-5 py-2.5 text-eyebrow">
+                      <span class="col-span-1">#</span><span class="col-span-7">Subscore</span>
+                      <span class="col-span-2 text-right">Weight</span><span class="col-span-2 text-right">Value</span>
+                    </div>
+                    <ol id="evidence-table"></ol>
+                  </div>
+                  <div class="flex flex-col gap-4 px-5 py-5">
+                    <svg id="dossier-radar" viewBox="0 0 300 300" class="h-auto w-full max-w-md mx-auto"></svg>
+                    <div>
+                      <p class="text-eyebrow">Risk flags</p>
+                      <ul class="mt-2 flex flex-col gap-1.5 text-xs leading-relaxed text-graphite-200">
+                        <li class="border border-graphite-800 bg-graphite-900/40 px-3 py-2">No high-severity risk flags raised.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="grid grid-cols-1 gap-6 lg:grid-cols-[1.2fr_1fr]">
+                <div>
+                  <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                    <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">05</span>
+                    <div>
+                      <p class="text-eyebrow">Pipeline</p>
+                      <h2 class="text-section font-medium text-graphite-50">Validation timeline</h2>
+                    </div>
+                  </header>
+                  <ol class="panel divide-y divide-graphite-800" id="vtl"></ol>
+                </div>
+                <div>
+                  <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                    <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">06</span>
+                    <div>
+                      <p class="text-eyebrow">Checklist</p>
+                      <h2 class="text-section font-medium text-graphite-50">Hydride-domain validation checklist</h2>
+                    </div>
+                  </header>
+                  <ul class="panel divide-y divide-graphite-800" id="checklist"></ul>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <!-- =========== CANDIDATE GENERATOR =========== -->
+          <section data-page="candidates">
+            <div class="mb-10 flex flex-col gap-5 border-b border-graphite-800 pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex max-w-3xl flex-col gap-2">
+                <p class="text-eyebrow">02 · Candidate Generator</p>
+                <h1 class="text-display font-semibold text-graphite-50">Submit a research request</h1>
+                <p class="text-body text-graphite-400">Every field maps to constraints in the Grok-native candidate prompt. Output is constrained to a strict JSON schema and validated server-side before storage.</p>
+              </div>
+              <a href="#" data-link="x-score" class="inline-flex h-9 items-center justify-center rounded-sharp border border-graphite-700 bg-graphite-900 px-4 text-body font-medium text-graphite-100">Open X-Score Lab</a>
+            </div>
+
+            <div class="flex flex-col gap-12">
+              <section>
+                <header class="mb-4 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                  <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">01</span>
+                  <div>
+                    <p class="text-eyebrow">Form</p>
+                    <h2 class="text-section font-medium text-graphite-50">Research request</h2>
+                    <p class="mt-1 text-xs text-graphite-400">Lab request form. Submission runs server-side; API keys are never exposed to the browser.</p>
+                  </div>
+                </header>
+                <form class="panel divide-y divide-graphite-800">
+                  <fieldset class="grid grid-cols-1 gap-x-6 gap-y-4 px-5 py-5 lg:grid-cols-[12rem_minmax(0,1fr)]">
+                    <div>
+                      <p class="text-eyebrow text-graphite-500">Section A</p>
+                      <p class="mt-1 text-body font-medium text-graphite-50">Objective</p>
+                      <p class="mt-1.5 text-xs leading-relaxed text-graphite-400">Highest-level intent of the research request.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                      <label class="flex flex-col gap-1.5">
+                        <span class="text-eyebrow">Research objective</span>
+                        <select class="field-input">
+                          <option>Ambient-pressure hydride candidate</option>
+                          <option>Low-pressure hydride superconductor</option>
+                          <option>Carbon-hydrogen framework</option>
+                        </select>
+                      </label>
+                      <label class="flex flex-col gap-1.5">
+                        <span class="text-eyebrow">Chemical family</span>
+                        <input class="field-input" value="B-C-H layered hydride"/>
+                      </label>
+                    </div>
+                  </fieldset>
+                  <fieldset class="grid grid-cols-1 gap-x-6 gap-y-4 px-5 py-5 lg:grid-cols-[12rem_minmax(0,1fr)]">
+                    <div>
+                      <p class="text-eyebrow text-graphite-500">Section B</p>
+                      <p class="mt-1 text-body font-medium text-graphite-50">Physical envelope</p>
+                      <p class="mt-1.5 text-xs leading-relaxed text-graphite-400">Pressure window and target Tc constrain the search space.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                      <label class="flex flex-col gap-1.5">
+                        <span class="text-eyebrow">Target pressure range</span>
+                        <input class="field-input" value="10–60 GPa"/>
+                      </label>
+                      <label class="flex flex-col gap-1.5">
+                        <span class="text-eyebrow">Desired Tc range</span>
+                        <input class="field-input" value="100–250 K"/>
+                      </label>
+                    </div>
+                  </fieldset>
+                  <fieldset class="grid grid-cols-1 gap-x-6 gap-y-4 px-5 py-5 lg:grid-cols-[12rem_minmax(0,1fr)]">
+                    <div>
+                      <p class="text-eyebrow text-graphite-500">Section C</p>
+                      <p class="mt-1 text-body font-medium text-graphite-50">Tolerances</p>
+                      <p class="mt-1.5 text-xs leading-relaxed text-graphite-400">Stability and synthesis tolerances bias the model.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                      <label class="flex flex-col gap-1.5">
+                        <span class="text-eyebrow">Stability preference</span>
+                        <select class="field-input"><option>Moderate stability</option></select>
+                      </label>
+                      <label class="flex flex-col gap-1.5">
+                        <span class="text-eyebrow">Synthesis difficulty tolerance</span>
+                        <select class="field-input"><option>Diamond anvil cell acceptable</option></select>
+                      </label>
+                    </div>
+                  </fieldset>
+                  <fieldset class="grid grid-cols-1 gap-x-6 gap-y-4 px-5 py-5 lg:grid-cols-[12rem_minmax(0,1fr)]">
+                    <div>
+                      <p class="text-eyebrow text-graphite-500">Section D</p>
+                      <p class="mt-1 text-body font-medium text-graphite-50">Output</p>
+                      <p class="mt-1.5 text-xs leading-relaxed text-graphite-400">How many candidates to return and any additional notes.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                      <label class="flex flex-col gap-1.5">
+                        <span class="text-eyebrow">Number of candidates</span>
+                        <input type="number" class="field-input text-mono-tab font-mono" value="3" min="1" max="6"/>
+                      </label>
+                    </div>
+                  </fieldset>
+                  <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+                    <p class="text-eyebrow text-graphite-500">Submission runs at /api/generate-candidates · JSON-schema constrained output.</p>
+                    <button type="button" class="inline-flex h-9 items-center justify-center rounded-sharp border border-accent-500/60 bg-accent-600 px-4 text-body font-medium text-white">Generate candidates</button>
+                  </div>
+                </form>
+              </section>
+
+              <section>
+                <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                  <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">02</span>
+                  <div>
+                    <p class="text-eyebrow">Result</p>
+                    <h2 class="text-section font-medium text-graphite-50">Generated candidates</h2>
+                  </div>
+                </header>
+                <div class="panel-flat flex flex-wrap items-center gap-3 px-4 py-2 mb-3">
+                  <span class="text-eyebrow">Source</span>
+                  <span class="font-mono text-xs text-graphite-100">xAI Grok · grok-4.3</span>
+                  <span class="h-3 w-px bg-graphite-800"></span>
+                  <span class="text-eyebrow">Mode</span>
+                  <span class="rounded-sharp border border-graphite-700 bg-graphite-900 px-2 py-0.5 text-eyebrow text-graphite-300">Demo (fallback)</span>
+                  <span class="h-3 w-px bg-graphite-800"></span>
+                  <span class="text-eyebrow">Returned</span>
+                  <span class="font-mono text-mono-tab text-xs text-graphite-100">3</span>
+                </div>
+                <div class="panel overflow-hidden">
+                  <div class="hairline-b px-5 py-3 text-eyebrow">Returned candidates</div>
+                  <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-left">
+                      <thead class="hairline-b bg-graphite-900/60 text-eyebrow">
+                        <tr><th class="px-5 py-2.5 font-medium">#</th><th class="px-5 py-2.5 font-medium">Candidate</th><th class="px-5 py-2.5 font-medium">Family</th><th class="px-5 py-2.5 font-medium">Pressure</th><th class="px-5 py-2.5 font-medium">Status</th><th class="px-5 py-2.5 text-right font-medium">X-Score</th></tr>
+                      </thead>
+                      <tbody id="result-rows"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <!-- =========== X-SCORE =========== -->
+          <section data-page="x-score">
+            <div class="mb-10 flex flex-col gap-5 border-b border-graphite-800 pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex max-w-3xl flex-col gap-2">
+                <p class="text-eyebrow">03 · X-Score Lab</p>
+                <h1 class="text-display font-semibold text-graphite-50">Scoring methodology</h1>
+                <p class="text-body text-graphite-400">Eight weighted subscores produce a single overall X-Score.</p>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-12">
+              <section>
+                <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                  <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">01</span>
+                  <div>
+                    <p class="text-eyebrow">Methodology</p>
+                    <h2 class="text-section font-medium text-graphite-50">Subscore definitions & weights</h2>
+                  </div>
+                </header>
+                <div class="panel overflow-hidden">
+                  <div class="hairline-b grid grid-cols-12 px-5 py-2.5 text-eyebrow">
+                    <span class="col-span-1">#</span><span class="col-span-4">Subscore</span>
+                    <span class="col-span-1 text-right">Weight</span><span class="col-span-5">Description</span><span class="col-span-1 text-right">Value</span>
+                  </div>
+                  <ol id="methodology-rows"></ol>
+                </div>
+              </section>
+
+              <section class="grid grid-cols-1 gap-6 lg:grid-cols-[1.2fr_1fr]">
+                <div>
+                  <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                    <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">02</span>
+                    <div>
+                      <p class="text-eyebrow">Adjust</p>
+                      <h2 class="text-section font-medium text-graphite-50">Interactive scoring panel</h2>
+                    </div>
+                  </header>
+                  <div class="panel divide-y divide-graphite-800" id="scoring-panel"></div>
+                </div>
+                <div>
+                  <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                    <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">03</span>
+                    <div>
+                      <p class="text-eyebrow">Result</p>
+                      <h2 class="text-section font-medium text-graphite-50">Aggregate</h2>
+                    </div>
+                  </header>
+                  <div class="panel flex flex-col gap-4 px-5 py-5">
+                    <div class="flex items-baseline gap-3">
+                      <span class="text-eyebrow">Overall X-Score</span>
+                      <span id="x-overall" class="font-mono text-mono-tab text-display text-graphite-50">68</span>
+                      <span class="text-eyebrow text-graphite-500">/ 100</span>
+                    </div>
+                    <div>
+                      <p class="text-eyebrow">Recommended next gate</p>
+                      <p class="mt-1 text-body text-graphite-100" id="x-next">DFPT phonon dispersion</p>
+                    </div>
+                    <svg id="x-radar" viewBox="0 0 300 300" class="h-auto w-full"></svg>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <!-- =========== SIMULATION =========== -->
+          <section data-page="simulation">
+            <div class="mb-10 flex flex-col gap-5 border-b border-graphite-800 pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex max-w-3xl flex-col gap-2">
+                <p class="text-eyebrow">04 · Simulation Builder</p>
+                <h1 class="text-display font-semibold text-graphite-50">Computational lab notebook</h1>
+                <p class="text-body text-graphite-400">Generate deterministic CIF, QE, GPAW/ASE, DFPT, EPW, and convergence templates for the selected candidate.</p>
+              </div>
+            </div>
+
+            <aside class="border border-amber-700/40 bg-amber-900/15 px-4 py-3 mb-12">
+              <p class="text-eyebrow text-amber-200">Validation required</p>
+              <p class="mt-1 text-xs leading-relaxed text-amber-100/85">Generated simulation files are preliminary templates and must be reviewed by computational materials scientists before execution.</p>
+            </aside>
+
+            <section>
+              <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">02</span>
+                <div>
+                  <p class="text-eyebrow">Notebook</p>
+                  <h2 class="text-section font-medium text-graphite-50">File workstation</h2>
+                </div>
+              </header>
+              <div class="panel grid grid-cols-1 lg:grid-cols-[14rem_minmax(0,1fr)] xl:grid-cols-[14rem_minmax(0,1fr)_18rem]">
+                <aside class="border-b border-graphite-800 lg:border-b-0 lg:border-r">
+                  <div class="hairline-b px-4 py-2.5"><p class="text-eyebrow">Files</p></div>
+                  <nav class="p-2" id="file-tree"></nav>
+                </aside>
+                <section class="flex min-h-[24rem] flex-col">
+                  <header class="hairline-b flex items-center justify-between gap-3 px-5 py-2.5">
+                    <div class="flex items-center gap-3">
+                      <p class="font-mono text-xs text-graphite-100" id="ws-filename">xh_bch_layered.qe.in</p>
+                      <span class="rounded-sharp border border-graphite-800 bg-graphite-950 px-2 py-0.5 text-eyebrow text-graphite-400" id="ws-language">ini</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button class="rounded-sharp border border-graphite-800 bg-graphite-950 px-2.5 py-1 text-eyebrow text-graphite-200 hover:border-graphite-600">Copy</button>
+                      <button class="rounded-sharp border border-graphite-800 bg-graphite-950 px-2.5 py-1 text-eyebrow text-graphite-200 hover:border-graphite-600">Download</button>
+                    </div>
+                  </header>
+                  <div class="flex-1 overflow-auto">
+                    <pre class="m-0 grid grid-cols-[3rem_minmax(0,1fr)] font-mono text-[12.5px] leading-[1.55]" id="ws-pre"></pre>
+                  </div>
+                </section>
+                <aside class="border-t border-graphite-800 xl:border-l xl:border-t-0">
+                  <div class="hairline-b px-4 py-2.5"><p class="text-eyebrow">Validation checklist</p></div>
+                  <ul class="divide-y divide-graphite-800" id="ws-checklist"></ul>
+                  <div class="border-t border-graphite-800 bg-amber-900/10 px-4 py-3">
+                    <p class="text-eyebrow text-amber-200">Reminder</p>
+                    <p class="mt-1 text-xs leading-relaxed text-amber-100/85">Templates do not include converged parameters.</p>
+                  </div>
+                </aside>
+              </div>
+            </section>
+          </section>
+
+          <!-- =========== REPORTS =========== -->
+          <section data-page="reports">
+            <div class="mb-10 flex flex-col gap-5 border-b border-graphite-800 pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex max-w-3xl flex-col gap-2">
+                <p class="text-eyebrow">05 · Research Reports</p>
+                <h1 class="text-display font-semibold text-graphite-50">Cautious academic-style notes</h1>
+                <p class="text-body text-graphite-400">Reports always frame their findings as exploratory hypotheses requiring computational and experimental validation.</p>
+              </div>
+            </div>
+
+            <article class="grid grid-cols-1 gap-8 lg:grid-cols-[14rem_minmax(0,1fr)]">
+              <aside class="hidden lg:block">
+                <div class="sticky top-20 flex flex-col gap-2">
+                  <p class="text-eyebrow">Sections</p>
+                  <ol class="flex flex-col gap-0.5" id="toc"></ol>
+                </div>
+              </aside>
+              <div>
+                <header class="border-b border-graphite-800 pb-6">
+                  <p class="text-eyebrow">Research note · xh-report-bch-001</p>
+                  <h1 class="mt-3 text-display font-semibold text-graphite-50">Preliminary AI-generated research note: B-C-H layered hydride candidate</h1>
+                  <p class="mt-3 text-xs text-graphite-400">Generated by xAI Grok · candidate <span class="font-mono text-graphite-300">xh-bch-layered</span> · 2026-01-01T00:00:00Z</p>
+                </header>
+                <section class="border-b border-graphite-800 px-0 py-6">
+                  <p class="text-eyebrow">Abstract</p>
+                  <p class="mt-3 max-w-prose text-body leading-7 text-graphite-200">We outline a preliminary AI-generated proposal for a B-C-H layered hydride candidate with proposed composition B2C2H8. The candidate is offered as a computational screening target rather than a confirmed superconductor and requires DFT, DFPT, EPW, Eliashberg, and RPA workflows before any quantitative claim of superconducting behavior can be made.</p>
+                </section>
+                <div id="report-sections"></div>
+              </div>
+            </article>
+          </section>
+
+          <!-- =========== AUDIT =========== -->
+          <section data-page="audit">
+            <div class="mb-10 flex flex-col gap-5 border-b border-graphite-800 pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex max-w-3xl flex-col gap-2">
+                <p class="text-eyebrow">06 · Audit Log</p>
+                <h1 class="text-display font-semibold text-graphite-50">Provenance ledger</h1>
+                <p class="text-body text-graphite-400">Each row is a SHA-256 digest of input, output, report, and simulation artifacts tied to a candidate. On-chain anchoring is staged for a future revision.</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button class="inline-flex h-8 items-center justify-center rounded-sharp border border-graphite-700 bg-graphite-900 px-3 text-xs font-medium text-graphite-100">Copy all (JSON)</button>
+                <button class="inline-flex h-8 items-center justify-center rounded-sharp border border-graphite-700 bg-graphite-900 px-3 text-xs font-medium text-graphite-100">Copy all (Markdown)</button>
+              </div>
+            </div>
+
+            <section>
+              <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+                <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">02</span>
+                <div>
+                  <p class="text-eyebrow">Ledger</p>
+                  <h2 class="text-section font-medium text-graphite-50">Audit records</h2>
+                </div>
+              </header>
+              <div class="panel overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="w-full border-collapse">
+                    <thead class="hairline-b bg-graphite-900/60 text-eyebrow">
+                      <tr>
+                        <th class="px-5 py-2.5 text-left font-medium">Audit ID</th>
+                        <th class="px-5 py-2.5 text-left font-medium">Candidate</th>
+                        <th class="px-5 py-2.5 text-left font-medium">Input</th>
+                        <th class="px-5 py-2.5 text-left font-medium">Output</th>
+                        <th class="px-5 py-2.5 text-left font-medium">Report</th>
+                        <th class="px-5 py-2.5 text-left font-medium">Simulation</th>
+                        <th class="px-5 py-2.5 text-left font-medium">Model</th>
+                        <th class="px-5 py-2.5 text-right font-medium">Chain</th>
+                      </tr>
+                    </thead>
+                    <tbody id="audit-rows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <!-- =========== SETTINGS =========== -->
+          <section data-page="settings">
+            <div class="mb-10 flex flex-col gap-5 border-b border-graphite-800 pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex max-w-3xl flex-col gap-2">
+                <p class="text-eyebrow">07 · Settings</p>
+                <h1 class="text-display font-semibold text-graphite-50">Configuration</h1>
+                <p class="text-body text-graphite-400">Read-only view of the platform's configuration. API keys are never returned by the API — only booleans indicating whether they are configured.</p>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-12" id="settings-sections"></div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ============ DATA ============
+      const NAV = [
+        { href:"overview", label:"Overview", code:"01" },
+        { href:"candidates", label:"Candidate Generator", code:"02" },
+        { href:"x-score", label:"X-Score Lab", code:"03" },
+        { href:"simulation", label:"Simulation Builder", code:"04" },
+        { href:"reports", label:"Research Reports", code:"05" },
+        { href:"audit", label:"Audit Log", code:"06" },
+        { href:"settings", label:"Settings", code:"07" },
+      ];
+      const OP_PARAMS = [
+        ["Default provider","xAI Grok"],
+        ["Default model","grok-4.3"],
+        ["Output format","json_schema (strict)"],
+        ["Audit hash","SHA-256"],
+        ["Demo mode","Enabled when API key absent"],
+      ];
+      const LINEAGE = [
+        { code:"00", label:"Grokene", body:"First proof-of-concept for AI-guided superconducting candidate discovery. Established the structured prompt → candidate JSON → audit hash pipeline." },
+        { code:"01", label:"X-Hydride Lab", body:"Extends the Grokene workflow into hydride-based superconductors with stricter scoring, simulation handoff, and provenance ledger." },
+      ];
+      const WORKFLOW = [
+        { code:"01", label:"Generate", body:"Submit a structured research request. xAI Grok returns strict-JSON candidate hypotheses constrained by an explicit schema." },
+        { code:"02", label:"Score", body:"Eight weighted subscores produce a single overall X-Score. Risk flags surface phonon, thermodynamic, and pressure concerns." },
+        { code:"03", label:"Prepare", body:"Generate CIF, Quantum ESPRESSO, GPAW/ASE, DFPT phonon, EPW, and convergence templates." },
+        { code:"04", label:"Document", body:"Draft a cautious academic-style research note framed as a hypothesis requiring DFT, DFPT, EPW, Eliashberg, and RPA validation." },
+        { code:"05", label:"Anchor", body:"SHA-256 hashes for input, output, report, and simulation artifacts are written to a provenance ledger." },
+      ];
+      const FRAMEWORK_INPUTS = ["Composition family","Target pressure","Tc range","Stability preference"];
+      const FRAMEWORK_GATES = ["DFT relaxation","DFPT phonon","EPW Eliashberg","Experimental"];
+      const FRAMEWORK_STEPS = WORKFLOW.map((w,i) => ({ ...w, code: String(i+1).padStart(2,"0") }));
+
+      const PIPELINE_STEPS = [
+        { label:"Input", description:"Research request" },
+        { label:"Generation", description:"Grok strict-JSON" },
+        { label:"Scoring", description:"Eight subscores" },
+        { label:"Simulation", description:"Template bundle" },
+        { label:"Documentation", description:"Cautious draft" },
+        { label:"Provenance", description:"SHA-256 ledger" },
+      ];
+      const CANDIDATES = [
+        { id:"xh-bch-layered", name:"B-C-H layered hydride candidate", family:"Boron-carbon-hydrogen layered framework", composition:"B2C2H8 (illustrative stoichiometry)", pressure:"20–60 GPa", status:"Awaiting DFT", x:72 },
+        { id:"xh-mgbh-low-pressure", name:"Mg-B-H low-pressure hydride candidate", family:"Mg-B-H ternary hydride", composition:"MgB2H4 (proposed)", pressure:"10–30 GPa", status:"Generated", x:68 },
+        { id:"xh-cach-intercalated", name:"Ca-C-H intercalated hydride candidate", family:"Ca-C-H intercalated framework", composition:"CaC6H6 (illustrative)", pressure:"5–25 GPa", status:"Awaiting DFPT", x:64 },
+        { id:"xh-labh-reduced-pressure", name:"La-B-H reduced-pressure hydride candidate", family:"La-B-H ternary clathrate-like framework", composition:"LaBH8 (proposed)", pressure:"30–80 GPa", status:"Awaiting EPW", x:76 },
+        { id:"xh-graphene-confined", name:"Graphene-confined hydride candidate", family:"Graphene-confined molecular hydride", composition:"C-H confined system", pressure:"1–10 GPa", status:"Generated", x:58 },
+      ];
+      const X_SCORE_CATS = [
+        { key:"thermo", label:"Thermodynamic Stability", weight:0.15, value:70, desc:"Convex-hull plausibility and formation enthalpy at the target pressure." },
+        { key:"phonon", label:"Phonon Stability", weight:0.15, value:65, desc:"Estimated absence of imaginary modes across the Brillouin zone." },
+        { key:"epc", label:"EPC Potential", weight:0.20, value:75, desc:"Plausibility of strong electron-phonon coupling from hydrogen modes." },
+        { key:"dos", label:"DOS / Fermi-Level Relevance", weight:0.10, value:60, desc:"Estimated weight of hydrogen-derived states at the Fermi level." },
+        { key:"pressure", label:"Pressure Feasibility", weight:0.15, value:55, desc:"How accessible the target pressure is for synthesis and measurement." },
+        { key:"synth", label:"Synthesis Feasibility", weight:0.10, value:50, desc:"Practical feasibility of the proposed synthesis pathway." },
+        { key:"novelty", label:"Novelty", weight:0.05, value:70, desc:"Distance from already-screened hydride candidates in the literature." },
+        { key:"validate", label:"Validation Readiness", weight:0.10, value:65, desc:"Maturity of the workflow needed to take the candidate to validation." },
+      ];
+      const VALIDATION_STEPS = [
+        "Generated","Awaiting DFT","Awaiting DFPT","Awaiting EPW","Awaiting Eliashberg","Awaiting RPA","Experimental validation required"
+      ];
+      const CHECKLIST = [
+        "Zero-point energy correction",
+        "Anharmonic phonon correction",
+        "Isotope H/D effect study",
+        "Pressure sweep across the target window",
+        "Convex hull / decomposition pathway analysis",
+        "Diamond anvil cell (DAC) synthesis feasibility assessment",
+      ];
+
+      const SIM_FILES = [
+        { id:"qe", group:"Quantum ESPRESSO", filename:"xh_bch_layered.qe.in", lang:"ini", body:`# X-Hydride Lab — Quantum ESPRESSO SCF template
+# Candidate: B-C-H layered hydride candidate
+# Composition (proposed): B2C2H8
+# Family: Boron-carbon-hydrogen layered framework
+# Pressure target: 20–60 GPa
+# Notice: This is a preliminary template. It must be reviewed and adjusted
+# by a computational materials scientist before being executed.
+
+&CONTROL
+  calculation = 'scf',
+  prefix      = 'xh_bch_layered',
+  outdir      = './out/',
+  pseudo_dir  = './pseudo/',
+  verbosity   = 'high',
+  tprnfor     = .true.,
+  tstress     = .true.,
+/
+&SYSTEM
+  ibrav        = 0,
+  nat          = 2,
+  ntyp         = 1,
+  ecutwfc      = 80.0,
+  ecutrho      = 640.0,
+  occupations  = 'smearing',
+  smearing     = 'mp',
+  degauss      = 0.02,
+/
+&ELECTRONS
+  conv_thr     = 1.0d-10,
+  mixing_beta  = 0.5,
+/
+ATOMIC_SPECIES
+  H 1.00794 H_ONCV_PBE.upf
+ATOMIC_POSITIONS crystal
+  H 0.000 0.000 0.000
+  H 0.500 0.500 0.500
+K_POINTS automatic
+  16 16 16 0 0 0
+CELL_PARAMETERS angstrom
+  5.0 0.0 0.0
+  0.0 5.0 0.0
+  0.0 0.0 5.0` },
+        { id:"epw", group:"Quantum ESPRESSO", filename:"xh_bch_layered.epw.in", lang:"ini", body:`&INPUTEPW
+  prefix       = 'xh_bch_layered',
+  outdir       = './out/',
+  elph         = .true.,
+  epbwrite     = .true.,
+  epwwrite     = .true.,
+  wannierize   = .true.,
+  num_iter     = 500,
+  fsthick      = 0.4,
+  degaussw     = 0.05,
+  nkf1         = 32, nkf2 = 32, nkf3 = 32,
+  nqf1         = 16, nqf2 = 16, nqf3 = 16,
+  eliashberg   = .true.,
+  liso         = .true.,
+/` },
+        { id:"phonon", group:"Quantum ESPRESSO", filename:"xh_bch_layered.ph.in", lang:"ini", body:`&INPUTPH
+  prefix     = 'xh_bch_layered',
+  tr2_ph     = 1.0d-14,
+  ldisp      = .true.,
+  nq1        = 4, nq2 = 4, nq3 = 4,
+  fildvscf   = 'dvscf',
+  electron_phonon = 'epa',
+  outdir     = './out/',
+/` },
+        { id:"gpaw", group:"GPAW", filename:"xh_bch_layered_gpaw.py", lang:"python", body:`from ase.build import bulk
+from ase.optimize import BFGS
+from gpaw import GPAW, PW
+
+atoms = bulk('H', 'fcc', a=4.0)
+atoms.calc = GPAW(
+    mode=PW(800),
+    xc='PBE',
+    kpts=(12, 12, 12),
+    occupations={'name': 'fermi-dirac', 'width': 0.05},
+    txt='gpaw.out',
+)
+energy = atoms.get_potential_energy()
+print('Total energy [eV]:', energy)
+BFGS(atoms).run(fmax=0.01)
+atoms.write('relaxed.traj')` },
+        { id:"cif", group:"Structure", filename:"xh_bch_layered.cif", lang:"text", body:`# CIF structural draft template
+data_xh_bch_layered
+_cell_length_a    5.000
+_cell_length_b    5.000
+_cell_length_c    5.000
+_cell_angle_alpha 90.000
+_cell_angle_beta  90.000
+_cell_angle_gamma 90.000
+_symmetry_space_group_name_H-M  'P 1'
+loop_
+_atom_site_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+H1 0.000 0.000 0.000
+H2 0.500 0.500 0.500` },
+        { id:"conv", group:"Verification", filename:"xh_bch_layered.convergence.yaml", lang:"yaml", body:`convergence:
+  candidate_id: xh-bch-layered
+  ecutwfc_sweep_ry: [60, 80, 100, 120]
+  ecutrho_ratio: 8
+  k_grid_sweep: [[12,12,12], [16,16,16], [20,20,20]]
+  q_grid_sweep: [[4,4,4], [6,6,6], [8,8,8]]
+  smearing_widths_ry: [0.005, 0.01, 0.02]` },
+      ];
+
+      const REPORT_SECTIONS = [
+        { id:"introduction", label:"Introduction", body:"Hydride-based superconductors continue to attract attention as candidates for high-Tc behavior under accessible pressures. The candidate is positioned within the B-C-H family and was generated as part of an exploratory screening campaign extending the Grokene framework to hydride candidates." },
+        { id:"candidate_structure", label:"Candidate Structure", body:"The proposed structural hypothesis describes alternating boron-carbon honeycomb layers with hydrogen interstitials forming covalent B-H and C-H bonds. The structure is offered as a starting hypothesis only; full structural relaxation and symmetry analysis are required to confirm a thermodynamically reasonable lattice." },
+        { id:"computational_methods", label:"Computational Methods", body:"We recommend a standard hydride-superconductivity workflow: structural relaxation in DFT (PBE or SCAN), DFPT-based phonon dispersion, electron-phonon coupling via EPW with sufficiently dense Wannier interpolation, and isotropic-to-anisotropic Eliashberg analysis to estimate Tc bounds." },
+        { id:"expected_electronic_properties", label:"Expected Electronic Properties", body:"The candidate is expected to exhibit hydrogen-derived contributions near the Fermi level. These expectations are pending DFT confirmation and should not be treated as established results." },
+        { id:"validation_plan", label:"Validation Plan", body:"DFT relaxation; DFPT phonon dispersion; EPW Eliashberg analysis; RPA dielectric screening; experimental DAC synthesis attempt. The hydride-domain checklist must also be addressed: zero-point energy correction, anharmonic phonon correction, isotope H/D effect study, pressure sweep, convex hull analysis, and DAC synthesis feasibility assessment." },
+        { id:"limitations", label:"Limitations", body:"Composition is illustrative only. No experimental synthesis has been attempted. Stability above 5 GPa is unverified. This document is a preliminary AI-generated proposal and does not constitute experimental evidence for superconductivity." },
+        { id:"conclusion", label:"Conclusion", body:"The candidate is presented as a computational screening target. No superconducting behavior is claimed. Whether the candidate proves promising depends entirely on the outcome of the recommended DFT, DFPT, EPW, Eliashberg, RPA, and experimental workflows." },
+      ];
+
+      const AUDITS = [
+        { id:"xh-audit-bch-layered-001", candidate:"xh-bch-layered", input:"9f3c1a2b41eebd07a4d2c12c558a93f1", output:"0e72b9c1a2d4ff6c66ad7f1928b4e201", report:"118c30be4a55217af28d12d0c01f3a55", sim:"44dd8902ee710bd5b9ac9211d5f6c89c", model:"grok-4.3", chain:"off-chain" },
+        { id:"xh-audit-labh-002", candidate:"xh-labh-reduced-pressure", input:"5611c0aa9d77ee2334b2f1d56a02d8b9", output:"44ef91c4d22ab9b8a0bb6f339912d4cc", report:"73091dd1cb9a4fe28b7a1c0e23b46d72", sim:"8a6c12993bbd0ef4c3e0d4b87a48c920", model:"grok-4.3", chain:"off-chain" },
+      ];
+
+      const SETTINGS = [
+        { idx:1, eyebrow:"Provider", title:"AI provider", desc:"Default provider is xAI Grok. Keys are read server-side only and never exposed to the browser.",
+          rows:[["Provider","xAI Grok","mono"],["Model","grok-4.3","mono"],["Base URL","https://api.x.ai/v1","mono"],["XAI_API_KEY","Not configured","warn"],["Response format","json_schema (strict)","mono"],["Audit hash","SHA-256 (node:crypto)","mono"]] },
+        { idx:2, eyebrow:"Backend", title:"Supabase", desc:"Optional. The lab runs in demo mode without it.",
+          rows:[["NEXT_PUBLIC_SUPABASE_URL","Not configured","muted"],["NEXT_PUBLIC_SUPABASE_ANON_KEY","Not configured","muted"],["SUPABASE_SERVICE_ROLE_KEY","Not configured","muted"]] },
+        { idx:3, eyebrow:"Mode", title:"Demo mode", desc:"When enabled the lab returns deterministic seed candidates and skips remote provider calls.",
+          rows:[["Status","Enabled (auto)","ok"]] },
+        { idx:4, eyebrow:"Export", title:"Audit export formats",
+          rows:[["JSON export","Enabled","ok"],["Markdown export","Enabled","ok"],["GitHub commit note","Enabled","ok"],["On-chain anchoring","Staged for future release","muted"]] },
+      ];
+
+      // ============ HELPERS ============
+      function el(html) {
+        const t = document.createElement("template");
+        t.innerHTML = html.trim();
+        return t.content.firstChild;
+      }
+      function statusStyle(s) {
+        if (s === "Generated") return "border-graphite-700 bg-graphite-900 text-graphite-200";
+        if (s === "Experimental validation required") return "border-amber-700/40 bg-amber-900/30 text-amber-200";
+        return "border-accent-700 bg-accent-900/30 text-accent-200";
+      }
+      function statusDot(s) {
+        if (s === "Generated") return "bg-graphite-400";
+        if (s === "Experimental validation required") return "bg-amber-300";
+        return "bg-accent-300";
+      }
+      function xPill(score, size) {
+        const tone = score>=80 ? {ring:"border-accent-700 bg-accent-900/40",text:"text-accent-100",label:"Strong"}
+          : score>=65 ? {ring:"border-accent-800 bg-accent-900/25",text:"text-accent-200",label:"Promising"}
+          : score>=50 ? {ring:"border-graphite-700 bg-graphite-900",text:"text-graphite-100",label:"Moderate"}
+          : {ring:"border-amber-700/40 bg-amber-900/30",text:"text-amber-200",label:"Speculative"};
+        const sz = size==="sm" ? "h-6 px-2 text-eyebrow" : "h-7 px-2.5 text-xs";
+        return `<span class="inline-flex items-center gap-2 rounded-sharp border font-mono text-mono-tab ${tone.ring} ${sz}">
+          <span class="text-graphite-400">X-Score</span>
+          <span class="font-semibold ${tone.text}">${score}</span>
+          <span class="text-graphite-600">·</span>
+          <span class="text-eyebrow text-graphite-400">${tone.label}</span>
+        </span>`;
+      }
+
+      // ============ ROUTING ============
+      function setActive(page) {
+        document.querySelectorAll("[data-page]").forEach((s) => {
+          s.classList.toggle("active", s.dataset.page === page);
+        });
+        document.querySelectorAll("[data-nav]").forEach((el) => {
+          el.classList.toggle("nav-active", el.dataset.nav === page);
+        });
+        window.scrollTo({ top: 0 });
+      }
+
+      // Sidebar
+      document.getElementById("nav-list").innerHTML = NAV.map((n) => `
+        <li>
+          <a href="#" data-link="${n.href}" data-nav="${n.href}"
+             class="flex items-center gap-3 rounded-sharp border-l border-l-transparent px-3 py-2 text-xs text-graphite-400 transition-colors hover:bg-graphite-900/60 hover:text-graphite-100">
+            <span class="nav-code font-mono text-mono-tab text-eyebrow text-graphite-500">${n.code}</span>
+            <span class="text-body font-medium tracking-tightish">${n.label}</span>
+          </a>
+        </li>`).join("");
+
+      // ============ LANDING ============
+      document.getElementById("op-params").innerHTML = OP_PARAMS.map(([k,v]) => `
+        <div class="flex items-baseline justify-between px-4 py-2.5">
+          <dt class="text-eyebrow">${k}</dt>
+          <dd class="font-mono text-mono-tab text-xs text-graphite-100">${v}</dd>
+        </div>`).join("");
+      document.getElementById("lineage").innerHTML = LINEAGE.map((e) => `
+        <article class="px-6 py-6">
+          <div class="flex items-baseline gap-3">
+            <span class="font-mono text-mono-tab text-eyebrow text-accent-300">${e.code}</span>
+            <h3 class="text-section font-medium text-graphite-50">${e.label}</h3>
+          </div>
+          <p class="mt-3 max-w-prose text-body leading-relaxed text-graphite-300">${e.body}</p>
+        </article>`).join("");
+      document.getElementById("framework").innerHTML = `
+        <figcaption class="mb-4 flex items-baseline gap-3">
+          <span class="text-eyebrow">Figure 01</span>
+          <span class="text-xs text-graphite-300">Discovery pipeline · inputs (top) feed candidate generation; validation gates (bottom) gate progression.</span>
+        </figcaption>
+        <div class="grid gap-3">
+          <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            ${FRAMEWORK_INPUTS.map((it,i)=>`<div class="flex items-center gap-2 border border-graphite-800 bg-graphite-900/60 px-3 py-2"><span class="font-mono text-mono-tab text-eyebrow text-graphite-500">I0${i+1}</span><span class="text-xs text-graphite-200">${it}</span></div>`).join("")}
+          </div>
+          <div class="flex justify-center"><span class="h-3 w-px bg-graphite-700"></span></div>
+          <ol class="grid grid-cols-1 gap-px overflow-hidden border border-graphite-800 sm:grid-cols-3 lg:grid-cols-6">
+            ${FRAMEWORK_STEPS.map((s,i)=>`<li class="bg-graphite-900 px-4 py-3"><div class="flex items-center gap-2"><span class="font-mono text-mono-tab text-eyebrow text-accent-300">${s.code}</span><span class="text-xs font-medium text-graphite-50">${s.label}</span></div><p class="mt-1 text-xs text-graphite-500">${s.body.split(".")[0].slice(0,60)}.</p></li>`).join("")}
+            <li class="bg-graphite-900 px-4 py-3"><div class="flex items-center gap-2"><span class="font-mono text-mono-tab text-eyebrow text-accent-300">06</span><span class="text-xs font-medium text-graphite-50">Anchor</span></div><p class="mt-1 text-xs text-graphite-500">SHA-256 hashes recorded.</p></li>
+          </ol>
+          <div class="flex justify-center"><span class="h-3 w-px bg-graphite-700"></span></div>
+          <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            ${FRAMEWORK_GATES.map((it,i)=>`<div class="flex items-center gap-2 border border-graphite-800 px-3 py-2"><span class="font-mono text-mono-tab text-eyebrow text-graphite-500">G0${i+1}</span><span class="text-xs text-graphite-200">${it}</span></div>`).join("")}
+          </div>
+        </div>`;
+      document.getElementById("wf-steps").innerHTML = WORKFLOW.map((s) => `
+        <li class="flex flex-col gap-2 px-5 py-5">
+          <span class="font-mono text-mono-tab text-eyebrow text-accent-300">${s.code}</span>
+          <p class="text-body font-medium tracking-tightish text-graphite-50">${s.label}</p>
+          <p class="text-xs leading-relaxed text-graphite-400">${s.body}</p>
+        </li>`).join("");
+
+      // ============ OVERVIEW ============
+      const total = CANDIDATES.length;
+      const avg = Math.round(CANDIDATES.reduce((a,c)=>a+c.x,0)/total);
+      const max = Math.max(...CANDIDATES.map(c=>c.x));
+      const pending = CANDIDATES.filter(c=>c.status!=="Experimental validation required").length;
+      document.getElementById("metrics").innerHTML = [
+        ["Total candidates", total, "Generated this session"],
+        ["Average X-Score", avg, "Weighted overall"],
+        ["Highest X-Score", max, "Best ranked candidate"],
+        ["Awaiting validation", pending, "Open computational gates"],
+      ].map(([k,v,h]) => `
+        <div class="flex flex-col gap-1 px-5 py-4">
+          <p class="text-eyebrow">${k}</p>
+          <p class="font-mono text-mono-tab text-2xl tracking-tightish text-graphite-50">${v}</p>
+          <p class="text-xs text-graphite-500">${h}</p>
+        </div>`).join("");
+
+      document.getElementById("pipeline").innerHTML = PIPELINE_STEPS.map((s,i) => `
+        <li class="flex flex-col gap-1.5 px-4 py-3 ${i===2?'bg-graphite-900':''}">
+          <div class="flex items-center gap-2">
+            <span class="grid h-5 w-5 place-items-center rounded-sharp font-mono text-mono-tab text-[10px] ${i===2?'bg-accent-500 text-white':i<2?'bg-graphite-700 text-graphite-100':'bg-graphite-900 text-graphite-500 ring-1 ring-graphite-800'}">${String(i+1).padStart(2,"0")}</span>
+            <span class="text-xs font-medium ${i===2?'text-graphite-50':'text-graphite-200'}">${s.label}</span>
+          </div>
+          <p class="ml-7 text-eyebrow normal-case tracking-normal text-graphite-500">${s.description}</p>
+        </li>`).join("");
+
+      document.getElementById("queue").innerHTML = CANDIDATES.slice(0,5).map((c,i) => `
+        <li class="flex items-baseline gap-4 px-5 py-3">
+          <span class="w-6 font-mono text-mono-tab text-eyebrow text-graphite-500">${String(i+1).padStart(2,"0")}</span>
+          <div class="flex-1">
+            <p class="text-body font-medium tracking-tightish text-graphite-50">${c.name}</p>
+            <p class="font-mono text-eyebrow text-graphite-500">${c.composition} · ${c.pressure}</p>
+          </div>
+          <span class="rounded-sharp border border-accent-700 bg-accent-900/30 px-2 py-0.5 text-eyebrow text-accent-200">${c.status}</span>
+        </li>`).join("");
+
+      const candidatesTable = (rows) => rows.map((c,i) => `
+        <tr class="hairline-b align-middle hover:bg-graphite-900/40">
+          <td class="px-5 py-3 font-mono text-mono-tab text-eyebrow text-graphite-500">${String(i+1).padStart(2,"0")}</td>
+          <td class="px-5 py-3"><a href="#" data-link="dossier" class="inline-flex flex-col gap-0.5 rounded-sharp text-graphite-50"><span class="text-body font-medium tracking-tightish">${c.name}</span><span class="font-mono text-eyebrow text-graphite-400">${c.composition}</span></a></td>
+          <td class="px-5 py-3 text-xs text-graphite-300">${c.family}</td>
+          <td class="px-5 py-3 font-mono text-mono-tab text-xs text-graphite-200">${c.pressure}</td>
+          <td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 rounded-sharp border ${statusStyle(c.status)} px-2 py-0.5 text-eyebrow"><span class="h-1 w-1 rounded-full ${statusDot(c.status)}"></span>${c.status}</span></td>
+          <td class="px-5 py-3 text-right">${xPill(c.x,"sm")}</td>
+        </tr>`).join("");
+      document.getElementById("candidates-table").innerHTML = candidatesTable(CANDIDATES);
+      document.getElementById("result-rows").innerHTML = candidatesTable(CANDIDATES.slice(0,3));
+
+      // ============ DOSSIER ============
+      const target = CANDIDATES[0];
+      document.getElementById("dossier-meta").innerHTML = [
+        ["Identifier", target.id, true],
+        ["Family", target.family, false],
+        ["Composition", target.composition, true],
+        ["Pressure target", target.pressure, true],
+        ["Status", target.status, false, "status"],
+        ["X-Score", `<span>${xPill(target.x,"sm")}</span>`, false, "html"],
+        ["Created", "2026-01-01T00:00:00Z", true],
+        ["Next gate", "DFT relaxation", false],
+      ].map(([k,v,mono,kind],i) => {
+        const inner = kind==="html" ? v : kind==="status" ? `<span class="inline-flex items-center gap-1.5 rounded-sharp border ${statusStyle(v)} px-2 py-0.5 text-eyebrow"><span class="h-1 w-1 rounded-full ${statusDot(v)}"></span>${v}</span>` : v;
+        const cls = mono ? "font-mono text-mono-tab text-graphite-50" : "text-graphite-50";
+        return `<div class="flex flex-col gap-1.5 border-graphite-800 px-5 py-4 ${i!==0?'border-t lg:border-t-0 lg:border-l':''} ${i===0?'lg:border-l-0':''}">
+          <dt class="text-eyebrow">${k}</dt>
+          <dd class="text-body ${cls}">${inner}</dd>
+        </div>`;
+      }).join("");
+
+      document.getElementById("hyp-fields").innerHTML = [
+        ["Structural hypothesis","Alternating boron-carbon honeycomb layers with hydrogen interstitials forming covalent B-H and C-H bonds."],
+        ["Expected EPC potential","Hydrogen-derived high-frequency modes may couple to B-C π* states; coupling strength is unconfirmed."],
+        ["Tc rationale","Light-mass H modes plus a metallic B-C scaffold could yield moderate λ; Tc is purely hypothetical and contingent on phonon stability."],
+        ["Synthesis pathway","High-pressure compression of borocarbide precursors in a hydrogen atmosphere within a diamond anvil cell."],
+      ].map(([k,v]) => `<div class="px-5 py-4"><p class="text-eyebrow">${k}</p><p class="mt-1.5 text-body leading-relaxed text-graphite-100">${v}</p></div>`).join("");
+
+      // Evidence subscores
+      const W = X_SCORE_CATS.map(c => Math.round(c.weight*100));
+      document.getElementById("evidence-table").innerHTML = X_SCORE_CATS.map((c,i) => `
+        <li class="hairline-b grid grid-cols-12 items-baseline gap-2 px-5 py-2.5">
+          <span class="col-span-1 font-mono text-mono-tab text-eyebrow text-graphite-500">${String(i+1).padStart(2,"0")}</span>
+          <span class="col-span-7 text-body text-graphite-100">${c.label}</span>
+          <span class="col-span-2 text-right font-mono text-mono-tab text-xs text-graphite-300">${W[i]}%</span>
+          <span class="col-span-2 text-right font-mono text-mono-tab text-body text-graphite-50">${c.value}</span>
+        </li>`).join("");
+
+      // VTL
+      const reachedIdx = VALIDATION_STEPS.indexOf(target.status);
+      document.getElementById("vtl").innerHTML = VALIDATION_STEPS.map((s,i) => {
+        const reached = i <= reachedIdx;
+        const active = i === reachedIdx;
+        return `<li class="flex items-center gap-4 px-5 py-3 ${active?'bg-graphite-900':''}">
+          <span class="font-mono text-mono-tab text-[11px] ${reached?'text-accent-300':'text-graphite-500'}">${String(i+1).padStart(2,"0")}</span>
+          <span class="h-3 w-px ${reached?'bg-accent-500':'bg-graphite-700'}"></span>
+          <span class="text-body ${active?'font-medium text-graphite-50':reached?'text-graphite-200':'text-graphite-500'}">${s}</span>
+          ${active?'<span class="ml-auto rounded-sharp border border-accent-700/60 bg-accent-900/40 px-2 py-0.5 text-eyebrow text-accent-200">current</span>':''}
+        </li>`;
+      }).join("");
+
+      document.getElementById("checklist").innerHTML = CHECKLIST.map((c,i) => `
+        <li class="flex items-center gap-3 px-5 py-2.5 text-body text-graphite-100">
+          <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">${String(i+1).padStart(2,"0")}</span>
+          <span>${c}</span>
+        </li>`).join("");
+
+      // ============ X-SCORE ============
+      function renderMethodology() {
+        document.getElementById("methodology-rows").innerHTML = X_SCORE_CATS.map((c,i) => `
+          <li class="hairline-b grid grid-cols-12 items-baseline gap-2 px-5 py-3">
+            <span class="col-span-1 font-mono text-mono-tab text-eyebrow text-graphite-500">${String(i+1).padStart(2,"0")}</span>
+            <span class="col-span-4 text-body text-graphite-100">${c.label}</span>
+            <span class="col-span-1 text-right font-mono text-mono-tab text-body text-graphite-200">${Math.round(c.weight*100)}%</span>
+            <span class="col-span-5 text-xs leading-relaxed text-graphite-400">${c.desc}</span>
+            <span class="col-span-1 text-right font-mono text-mono-tab text-body text-graphite-50">${c.value}</span>
+          </li>`).join("");
+      }
+      function renderScoringPanel() {
+        document.getElementById("scoring-panel").innerHTML = X_SCORE_CATS.map((c) => `
+          <div class="flex items-center gap-4 px-5 py-3">
+            <div class="w-56 shrink-0">
+              <p class="text-body text-graphite-100">${c.label}</p>
+              <p class="text-eyebrow normal-case tracking-normal text-graphite-500">Weight ${Math.round(c.weight*100)}%</p>
+            </div>
+            <input data-key="${c.key}" type="range" min="0" max="100" value="${c.value}" class="flex-1 cursor-pointer accent-accent-500"/>
+            <span class="w-12 text-right font-mono text-mono-tab text-body text-graphite-50" data-val="${c.key}">${c.value}</span>
+          </div>`).join("");
+        document.querySelectorAll("[data-key]").forEach((el) => {
+          el.addEventListener("input", (e) => {
+            const k = e.target.dataset.key;
+            const v = Number(e.target.value);
+            const target = X_SCORE_CATS.find(c => c.key === k);
+            if (target) target.value = v;
+            document.querySelector(`[data-val="${k}"]`).textContent = v;
+            renderRadar("x-radar");
+            renderRadar("dossier-radar");
+            renderMethodology();
+            const overall = Math.round(X_SCORE_CATS.reduce((a,c)=>a+c.value*c.weight,0));
+            document.getElementById("x-overall").textContent = overall;
+            const next = X_SCORE_CATS.find(c => c.value < 60);
+            document.getElementById("x-next").textContent = next ? `${next.label} validation` : "Experimental validation planning";
+          });
+        });
+      }
+      function renderRadar(id) {
+        const svg = document.getElementById(id);
+        if (!svg) return;
+        const size = 300, center = size/2, radius = center - 36;
+        const step = (Math.PI*2) / X_SCORE_CATS.length;
+        const points = X_SCORE_CATS.map((c,i) => {
+          const a = -Math.PI/2 + i*step;
+          const r = (c.value/100)*radius;
+          return [center + r*Math.cos(a), center + r*Math.sin(a)];
+        });
+        const polygon = points.map(([x,y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
+        const rings = [25,50,75,100].map(rv => {
+          const r = (rv/100)*radius;
+          const pts = X_SCORE_CATS.map((_,i) => {
+            const a = -Math.PI/2 + i*step;
+            return `${(center + r*Math.cos(a)).toFixed(2)},${(center + r*Math.sin(a)).toFixed(2)}`;
+          }).join(" ");
+          return `<polygon points="${pts}" fill="none" stroke="rgba(154,161,179,0.16)" stroke-width="1"/>`;
+        }).join("");
+        const spokes = X_SCORE_CATS.map((_,i) => {
+          const a = -Math.PI/2 + i*step;
+          return `<line x1="${center}" y1="${center}" x2="${center + radius*Math.cos(a)}" y2="${center + radius*Math.sin(a)}" stroke="rgba(154,161,179,0.12)" stroke-width="1"/>`;
+        }).join("");
+        const dots = points.map(([x,y]) => `<circle cx="${x}" cy="${y}" r="3" fill="#5fb9ff" stroke="#070910" stroke-width="1.5"/>`).join("");
+        const labels = X_SCORE_CATS.map((c,i) => {
+          const a = -Math.PI/2 + i*step;
+          const lr = radius + 22;
+          const x = center + lr*Math.cos(a);
+          const y = center + lr*Math.sin(a);
+          const cos = Math.cos(a);
+          const anchor = cos < -0.2 ? "end" : cos > 0.2 ? "start" : "middle";
+          const short = ({thermo:"Thermo",phonon:"Phonon",epc:"EPC",dos:"DOS/EF",pressure:"Pressure",synth:"Synth",novelty:"Novelty",validate:"Validate"})[c.key];
+          return `<text x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="middle" fill="rgba(154,161,179,0.85)" font-size="10" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">${short}</text>`;
+        }).join("");
+        svg.innerHTML = `
+          <defs><radialGradient id="${id}-fill" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(95,185,255,0.32)"/>
+            <stop offset="100%" stop-color="rgba(95,185,255,0.10)"/>
+          </radialGradient></defs>
+          ${rings}${spokes}
+          <polygon points="${polygon}" fill="url(#${id}-fill)" stroke="rgba(95,185,255,0.85)" stroke-width="1.5" stroke-linejoin="round"/>
+          ${dots}${labels}`;
+      }
+      renderMethodology();
+      renderScoringPanel();
+      renderRadar("x-radar");
+      renderRadar("dossier-radar");
+
+      // ============ SIMULATION ============
+      let activeFile = "qe";
+      function renderFileTree() {
+        const groups = new Map();
+        SIM_FILES.forEach((f) => {
+          const arr = groups.get(f.group) ?? [];
+          arr.push(f);
+          groups.set(f.group, arr);
+        });
+        document.getElementById("file-tree").innerHTML = Array.from(groups.entries()).map(([g, list]) => `
+          <div class="mb-3 last:mb-0">
+            <p class="px-2 py-1 text-eyebrow text-graphite-500">${g}</p>
+            <ul class="flex flex-col">
+              ${list.map((f) => `<li>
+                <button data-file="${f.id}" class="flex w-full items-center justify-between gap-2 rounded-sharp px-2 py-1.5 text-left text-xs font-mono transition-colors ${f.id===activeFile?'bg-graphite-900 text-graphite-50':'text-graphite-300 hover:bg-graphite-900/60 hover:text-graphite-100'}">
+                  <span class="truncate">${f.filename}</span>
+                </button>
+              </li>`).join("")}
+            </ul>
+          </div>`).join("");
+        document.querySelectorAll("[data-file]").forEach((el) => {
+          el.addEventListener("click", () => {
+            activeFile = el.dataset.file;
+            renderFileTree();
+            renderEditor();
+          });
+        });
+      }
+      function renderEditor() {
+        const f = SIM_FILES.find((x) => x.id === activeFile);
+        document.getElementById("ws-filename").textContent = f.filename;
+        document.getElementById("ws-language").textContent = f.lang;
+        const lines = f.body.split("\n");
+        document.getElementById("ws-pre").innerHTML = `
+          <code aria-hidden class="select-none border-r border-graphite-800 bg-graphite-925 py-3 pr-3 text-right text-graphite-600">${lines.map((_,i)=>`<span class="block">${String(i+1).padStart(3," ")}</span>`).join("")}</code>
+          <code class="py-3 pl-4 pr-5 text-graphite-200">${lines.map((ln)=>`<span class="block whitespace-pre">${escapeHtml(ln) || " "}</span>`).join("")}</code>`;
+      }
+      function escapeHtml(s) {
+        return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      }
+      renderFileTree();
+      renderEditor();
+      document.getElementById("ws-checklist").innerHTML = CHECKLIST.map((c,i) => `
+        <li class="flex items-baseline gap-3 px-4 py-2.5">
+          <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">${String(i+1).padStart(2,"0")}</span>
+          <span class="text-xs text-graphite-200">${c}</span>
+        </li>`).join("");
+
+      // ============ REPORTS ============
+      document.getElementById("toc").innerHTML = REPORT_SECTIONS.map((s,i) => `
+        <li><a href="#${s.id}" class="flex items-center gap-3 rounded-sharp px-2 py-1.5 text-xs text-graphite-400 hover:text-graphite-100">
+          <span class="font-mono text-mono-tab text-graphite-500">${String(i+1).padStart(2,"0")}</span>
+          <span>${s.label}</span>
+        </a></li>`).join("");
+      document.getElementById("report-sections").innerHTML = REPORT_SECTIONS.map((s,i) => `
+        <section id="${s.id}" class="border-b border-graphite-800 py-7">
+          <header class="mb-3 flex items-baseline gap-3">
+            <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">${String(i+1).padStart(2,"0")}</span>
+            <h2 class="text-section font-medium text-graphite-50">${s.label}</h2>
+          </header>
+          <div class="doc-prose max-w-prose"><p>${s.body}</p></div>
+        </section>`).join("");
+
+      // ============ AUDIT ============
+      document.getElementById("audit-rows").innerHTML = AUDITS.map((a) => `
+        <tr class="hairline-b align-middle hover:bg-graphite-900/50">
+          <td class="px-5 py-3 font-mono text-mono-tab text-xs text-graphite-200">${a.id}</td>
+          <td class="px-5 py-3 font-mono text-mono-tab text-xs text-graphite-200">${a.candidate}</td>
+          <td class="px-5 py-3 font-mono text-mono-tab text-xs text-graphite-200">${a.input.slice(0,12)}…</td>
+          <td class="px-5 py-3 font-mono text-mono-tab text-xs text-graphite-200">${a.output.slice(0,12)}…</td>
+          <td class="px-5 py-3 font-mono text-mono-tab text-xs text-graphite-200">${a.report.slice(0,12)}…</td>
+          <td class="px-5 py-3 font-mono text-mono-tab text-xs text-graphite-200">${a.sim.slice(0,12)}…</td>
+          <td class="px-5 py-3 text-xs text-graphite-300">${a.model}</td>
+          <td class="px-5 py-3 text-right"><span class="rounded-sharp border border-graphite-800 bg-graphite-900 px-2 py-0.5 text-eyebrow text-graphite-300">${a.chain}</span></td>
+        </tr>`).join("");
+
+      // ============ SETTINGS ============
+      function settingsValue(v, tone) {
+        if (tone === "ok") return `<span class="rounded-sharp border border-accent-700 bg-accent-900/40 px-2 py-0.5 text-eyebrow text-accent-200">${v}</span>`;
+        if (tone === "warn") return `<span class="rounded-sharp border border-amber-700/40 bg-amber-900/30 px-2 py-0.5 text-eyebrow text-amber-200">${v}</span>`;
+        if (tone === "muted") return `<span class="rounded-sharp border border-graphite-700 bg-graphite-900 px-2 py-0.5 text-eyebrow text-graphite-300">${v}</span>`;
+        if (tone === "mono") return `<span class="font-mono text-mono-tab text-graphite-100">${v}</span>`;
+        return `<span class="text-graphite-100">${v}</span>`;
+      }
+      document.getElementById("settings-sections").innerHTML = SETTINGS.map(s => `
+        <section>
+          <header class="mb-3 flex items-baseline gap-3 border-b border-graphite-800 pb-3">
+            <span class="font-mono text-mono-tab text-eyebrow text-graphite-500">${String(s.idx).padStart(2,"0")}</span>
+            <div>
+              <p class="text-eyebrow">${s.eyebrow}</p>
+              <h2 class="text-section font-medium text-graphite-50">${s.title}</h2>
+              ${s.desc?`<p class="mt-1 text-xs text-graphite-400">${s.desc}</p>`:""}
+            </div>
+          </header>
+          <dl class="panel divide-y divide-graphite-800">
+            ${s.rows.map(([k,v,tone]) => `
+              <div class="grid grid-cols-1 gap-2 px-5 py-3 sm:grid-cols-[16rem_minmax(0,1fr)] sm:items-baseline">
+                <dt class="text-eyebrow">${k}</dt>
+                <dd class="text-body">${settingsValue(v, tone)}</dd>
+              </div>`).join("")}
+          </dl>
+        </section>`).join("");
+
+      // ============ ROUTING WIRE-UP ============
+      document.body.addEventListener("click", (e) => {
+        const t = e.target.closest("[data-link]");
+        if (!t) return;
+        e.preventDefault();
+        setActive(t.dataset.link);
+      });
+
+      setActive("landing");
+    </script>
+  </body>
+</html>

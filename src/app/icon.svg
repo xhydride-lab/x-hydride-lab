@@ -1,0 +1,49 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 48 48"
+  fill="none"
+  role="img"
+  aria-label="X-Hydride Lab"
+>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(95,185,255,0.55)" />
+      <stop offset="60%" stop-color="rgba(95,185,255,0.18)" />
+      <stop offset="100%" stop-color="rgba(95,185,255,0.0)" />
+    </radialGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Soft ambient glow behind the mark -->
+  <circle cx="24" cy="24" r="22" fill="url(#glow)" />
+
+  <!-- Stepped X arms — top-left -->
+  <g stroke="#9bd4ff" stroke-width="2" stroke-linecap="square" filter="url(#soft)">
+    <polyline points="24,24 21,24 21,21 18,21 18,18 14,18 14,14 10,14 10,10" />
+    <polyline points="24,24 27,24 27,21 30,21 30,18 34,18 34,14 38,14 38,10" />
+    <polyline points="24,24 27,24 27,27 30,27 30,30 34,30 34,34 38,34 38,38" />
+    <polyline points="24,24 21,24 21,27 18,27 18,30 14,30 14,34 10,34 10,38" />
+  </g>
+
+  <!-- Endpoint nodes (small squares) -->
+  <g fill="#cfeaff">
+    <rect x="9" y="9" width="2" height="2" />
+    <rect x="37" y="9" width="2" height="2" />
+    <rect x="37" y="37" width="2" height="2" />
+    <rect x="9" y="37" width="2" height="2" />
+  </g>
+
+  <!-- Mid-arm tick markers -->
+  <g fill="#5fb9ff" opacity="0.85">
+    <rect x="17" y="17" width="1.4" height="1.4" />
+    <rect x="29.6" y="17" width="1.4" height="1.4" />
+    <rect x="29.6" y="29.6" width="1.4" height="1.4" />
+    <rect x="17" y="29.6" width="1.4" height="1.4" />
+  </g>
+
+  <!-- Center node -->
+  <circle cx="24" cy="24" r="3" fill="#0a0c13" stroke="#9bd4ff" stroke-width="1.4" />
+  <circle cx="24" cy="24" r="1.2" fill="#cfeaff" />
+</svg>
