@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LinkButton } from "@/components/Button";
 import { ScientificDisclaimer } from "@/components/ScientificDisclaimer";
 import { FrameworkDiagram } from "@/components/FrameworkDiagram";
-import { Logomark, LogomarkLockup } from "@/components/Logomark";
+import { LogomarkBanner, LogomarkLockup } from "@/components/Logomark";
 
 const LINEAGE = [
   {
@@ -114,8 +114,8 @@ function Hero() {
       <div aria-hidden className="hero-glow pointer-events-none absolute inset-0" />
       <div className="relative mx-auto w-full max-w-[88rem] px-6 pb-28 pt-24 sm:px-10 sm:pt-32 lg:px-14 lg:pt-40">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1.4fr_1fr] lg:items-end">
-          <div className="flex flex-col items-start gap-7">
-            <Logomark size={56} />
+          <div className="flex flex-col items-start gap-9">
+            <LogomarkBanner markSize={104} />
             <h1 className="max-w-3xl text-5xl font-semibold tracking-[-0.03em] text-graphite-50 sm:text-[64px] sm:leading-[1.05] lg:text-[76px]">
               The Grok-native discovery platform for hydride superconductors.
             </h1>

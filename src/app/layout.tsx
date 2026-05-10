@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { Orbitron } from "next/font/google";
 import "./globals.css";
+
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-orbitron",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -37,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${orbitron.variable}`}>
       <body className="min-h-screen bg-graphite-950 text-graphite-100 antialiased">
         {children}
       </body>
