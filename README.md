@@ -188,3 +188,5 @@ The project is build-ready for Vercel but is intentionally not deployed. To depl
 This software generates exploratory AI research hypotheses only. It does not validate superconductivity. All candidates, scores, reports, and simulation templates are exploratory artifacts and require DFT, DFPT, EPW, Eliashberg, RPA, and experimental validation before any scientific claim can be made.
 
 X-Hydride Lab is a Grok-native research preview. The default AI provider is xAI Grok, configured via `XAI_API_KEY` and `XAI_MODEL` (default `grok-4.3`).
+
+<!-- ci: trigger initial Vercel deployment -->
