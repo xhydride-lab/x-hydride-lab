@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import { LogomarkLockup } from "@/components/Logomark";
+import { XLink } from "@/components/XLink";
 
 interface TopbarProps {
   /** Reserved for future demo/live signaling. Currently not rendered. */
@@ -39,11 +40,14 @@ export function Topbar({ className }: TopbarProps) {
 
       <nav
         aria-label="Primary actions"
-        className="hidden items-center gap-1 sm:flex"
+        className="flex items-center gap-1"
       >
-        <TopbarLink href="/overview">Overview</TopbarLink>
-        <TopbarLink href="/candidates">Generate</TopbarLink>
-        <TopbarLink href="/audit">Provenance</TopbarLink>
+        <span className="hidden sm:contents">
+          <TopbarLink href="/overview">Overview</TopbarLink>
+          <TopbarLink href="/candidates">Generate</TopbarLink>
+          <TopbarLink href="/audit">Provenance</TopbarLink>
+        </span>
+        <XLink className="ml-1" />
       </nav>
     </header>
   );

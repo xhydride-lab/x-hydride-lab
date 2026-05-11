@@ -179,13 +179,19 @@ PRs welcome. Please:
 
 ## 8. Community · verification
 
-The official X-Hydride Lab community token is launched on **Pump.fun** (Solana). Its canonical mint address is:
+Canonical X-Hydride Lab channels:
+
+- **Website:** <https://xhydride.xyz>
+- **X (Twitter):** [@xhydride](https://x.com/xhydride?s=21)
+- **GitHub:** <https://github.com/xhydride-lab/x-hydride-lab>
+
+The official community token is launched on **Pump.fun** (Solana). Its canonical mint address is:
 
 ```
 7wABWr1g1AEZaszbZkm8bJ6hKN7i4sEDa39HtrxPpump
 ```
 
-This address is published **solely for verification** so that observers can confirm which on-chain address is canonical and avoid scam clones or impersonators.
+All of the above are listed **solely for verification** so that observers can confirm which channels and on-chain address are canonical and avoid scam clones or impersonators.
 
 > Nothing in this repository is an offer, solicitation, recommendation, or any form of investment, financial, legal, or tax advice. The community token is independent of the scientific output of this software. No candidate, X-Score, research note, or simulation in this repository implies any financial outcome, and no claim of superconductivity is being made. Do your own research.
 

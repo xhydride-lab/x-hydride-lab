@@ -3,6 +3,7 @@ import { LinkButton } from "@/components/Button";
 import { ScientificDisclaimer } from "@/components/ScientificDisclaimer";
 import { FrameworkDiagram } from "@/components/FrameworkDiagram";
 import { LogomarkBanner, LogomarkLockup } from "@/components/Logomark";
+import { XLink, XGlyph } from "@/components/XLink";
 
 const LINEAGE = [
   {
@@ -81,6 +82,7 @@ function LandingNav() {
           <NavLink href="/overview">Overview</NavLink>
           <NavLink href="/candidates">Generate</NavLink>
           <NavLink href="/x-score">X-Score</NavLink>
+          <XLink className="ml-1" />
           <span className="ml-2">
             <Link
               href="/overview"
@@ -315,7 +317,18 @@ function CommunityTokenBlock() {
       aria-label="Community verification"
       className="mt-10 flex flex-col gap-3 rounded-2xl border border-graphite-800/80 bg-graphite-925/60 px-5 py-5 sm:px-7 sm:py-6"
     >
-      <p className="text-eyebrow text-graphite-300">Community · verification</p>
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <p className="text-eyebrow text-graphite-300">Community · verification</p>
+        <a
+          href="https://x.com/xhydride?s=21"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="focus-ring inline-flex items-center gap-1.5 rounded-md text-[12px] text-graphite-400 hover:text-graphite-100"
+        >
+          <XGlyph size={11} />
+          @xhydride
+        </a>
+      </div>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
         <p className="text-[12.5px] leading-relaxed text-graphite-400">
           Official community token (Pump.fun · Solana). Listed solely so
