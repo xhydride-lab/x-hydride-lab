@@ -4,13 +4,28 @@ A Grok-native AI discovery platform for hydride-based superconductors.
 
 X-Hydride Lab extends the Grokene discovery framework into hydride research, providing structured candidate generation, weighted X-Score evaluation, simulation input templates, cautious academic-style research notes, and audit-grade provenance records suitable for open DeSci workflows.
 
-This repository is the MVP described in the X-Hydride Lab specification. It is built with Next.js 14 (App Router), TypeScript, and Tailwind CSS. The default AI provider is xAI Grok; the app falls back to high-quality demo data when no API key is configured.
-
-> **Project isolation.** This is an isolated, brand-new project named `x-hydride-lab`. It does not touch, modify, or connect to any existing GitHub, Vercel, or Supabase project. Demo mode is the default. You will not push to GitHub, deploy to Vercel, or connect to Supabase until you explicitly choose to.
+Live: **<https://xhydride.xyz>**
 
 ---
 
-## 1. Setup
+## Disclaimer
+
+> **Research preview — exploratory AI hypotheses only.**
+>
+> X-Hydride Lab generates *exploratory* AI-derived candidate hypotheses. Nothing this software outputs is a validated scientific result and nothing here is investment, financial, or trading advice. Every candidate, X-Score, research note, and simulation template **must** be independently validated through DFT, DFPT, EPW, Eliashberg, RPA, and experimental work before any scientific claim is made. Use at your own risk.
+
+---
+
+## Stack
+
+- Next.js 14 (App Router) · TypeScript · Tailwind CSS
+- AI provider: **xAI Grok** (default model `grok-4.3`), called server-side over the OpenAI-compatible `/chat/completions` endpoint with strict `json_schema` response format
+- Persistence: Supabase (Postgres) with SHA-256 provenance hashing
+- Hosting: Vercel
+
+---
+
+## 1. Local setup
 
 ```bash
 npm install
@@ -29,8 +44,6 @@ If `XAI_API_KEY` is empty, X-Hydride Lab automatically operates in demo mode:
 - Research notes use a built-in fallback template that mirrors the academic-style structure.
 - Simulation bundles, X-Score breakdowns, and audit hashes are computed locally without any external service call.
 
-Demo mode is shown as a `Demo Mode` pill in the top-right of the application chrome.
-
 ### xAI Grok mode
 
 When `XAI_API_KEY` is present, server-side route handlers call the xAI `/chat/completions` endpoint with strict JSON output. Keys are read **server-side only**. Browsers never see the key.
@@ -47,51 +60,34 @@ XAI_BASE_URL=https://api.x.ai/v1
 
 ```
 x-hydride-lab/
-├── public/                       # static assets (currently empty)
-├── supabase/schema.sql           # draft schema for FUTURE Supabase use
+├── public/                       # static assets (brand artwork)
+├── supabase/schema.sql           # candidates / reports / simulation_files / audit_logs
 ├── src/
-│   ├── app/
-│   │   ├── page.tsx              # landing page
-│   │   ├── overview/page.tsx     # research console dashboard
-│   │   ├── candidates/page.tsx   # candidate generator form
-│   │   ├── candidates/[id]/page.tsx
-│   │   ├── x-score/page.tsx      # weighted X-Score lab
-│   │   ├── simulation/page.tsx   # simulation builder
-│   │   ├── reports/page.tsx      # academic-style research notes
-│   │   ├── audit/page.tsx        # audit log
-│   │   ├── settings/page.tsx     # provider + Supabase status (read-only)
-│   │   ├── api/
-│   │   │   ├── generate-candidates/route.ts
-│   │   │   ├── generate-report/route.ts
-│   │   │   ├── generate-simulation/route.ts
-│   │   │   ├── create-audit-log/route.ts
-│   │   │   └── settings/route.ts
-│   │   ├── globals.css
-│   │   ├── layout.tsx
-│   │   └── not-found.tsx
-│   ├── components/               # AppShell, Sidebar, Topbar, MetricCard,
-│   │                             # CandidateCard, CandidateTable, XScoreBadge,
-│   │                             # XScoreRadar, StatusBadge, PipelineStepper,
+│   ├── app/                      # Next.js App Router routes
+│   │   ├── page.tsx              # landing
+│   │   ├── overview/             # dashboard
+│   │   ├── candidates/           # generator + detail
+│   │   ├── x-score/              # weighted X-Score lab
+│   │   ├── simulation/           # CIF / QE / GPAW / phonon / EPW / convergence bundle
+│   │   ├── reports/              # academic-style research notes
+│   │   ├── audit/                # SHA-256 audit ledger
+│   │   ├── settings/             # provider + Supabase status
+│   │   └── api/                  # generate-candidates · generate-report ·
+│   │                             # generate-simulation · create-audit-log · settings
+│   ├── components/               # AppShell, Sidebar, Topbar, Logomark,
+│   │                             # CandidateCard/Table, XScoreRadar, StatusBadge,
 │   │                             # ResearchPanel, CodeBlock, AuditRecordCard,
-│   │                             # ScientificDisclaimer, EmptyState,
-│   │                             # LoadingState, Button
+│   │                             # ScientificDisclaimer, MetricStrip, …
 │   ├── lib/
-│   │   ├── ai/
-│   │   │   ├── providers/xai.ts
-│   │   │   ├── types.ts
-│   │   │   ├── prompts.ts
-│   │   │   ├── jsonExtract.ts
-│   │   │   ├── generateHydrideCandidates.ts
-│   │   │   ├── generateReport.ts
-│   │   │   └── generateSimulation.ts
-│   │   ├── audit/hash.ts
+│   │   ├── ai/                   # xAI provider + prompts + JSON schema + extractors
+│   │   ├── audit/hash.ts         # SHA-256 over stable JSON payloads
 │   │   ├── data/seedCandidates.ts
-│   │   ├── scoring/xScore.ts
+│   │   ├── data/domainChecklist.ts
+│   │   ├── scoring/xScore.ts     # weighted X-Score formula
 │   │   ├── store/labStore.ts
 │   │   └── utils/cn.ts
 │   └── types/index.ts
 ├── .env.example
-├── .gitignore
 ├── next.config.mjs
 ├── package.json
 ├── postcss.config.mjs
@@ -105,15 +101,15 @@ x-hydride-lab/
 
 | Path | Purpose |
 | ---- | ------- |
-| `/` | Landing page introducing X-Hydride Lab as a Grok-native research preview. |
-| `/overview` | Dashboard with metrics, pipeline visualization, recent candidates, and recent audit records. |
-| `/candidates` | Candidate generator form. Submits to `/api/generate-candidates`. |
-| `/candidates/[id]` | Candidate detail view with X-Score radar, status timeline, report controls, and audit controls. |
+| `/` | Landing page introducing X-Hydride Lab. |
+| `/overview` | Dashboard with metrics, pipeline visualization, recent candidates, recent audit records. |
+| `/candidates` | Candidate generator form (submits to `/api/generate-candidates`). |
+| `/candidates/[id]` | Candidate detail view with X-Score radar, status timeline, report controls, audit controls. |
 | `/x-score` | Interactive weighted X-Score laboratory. |
-| `/simulation` | Simulation Builder with CIF / QE / GPAW / phonon / EPW / convergence templates. |
+| `/simulation` | Simulation builder — CIF, Quantum ESPRESSO, GPAW/ASE, DFPT phonon, EPW, convergence templates. |
 | `/reports` | Cautious academic-style research notes. |
-| `/audit` | Audit log with JSON / Markdown / commit-note exports. |
-| `/settings` | Read-only provider, Supabase, and demo-mode status. |
+| `/audit` | Audit ledger with JSON / Markdown / commit-note exports. |
+| `/settings` | Provider, Supabase, and demo-mode status (read-only). |
 
 ---
 
@@ -124,14 +120,15 @@ src/lib/ai/
 ├── providers/xai.ts          # OpenAI-compatible /chat/completions client
 ├── types.ts                  # AIProvider, ChatCompletionRequest/Response
 ├── prompts.ts                # system + user prompt templates
+├── schemas.ts                # strict json_schema definitions
 ├── jsonExtract.ts            # tolerant JSON extraction
 ├── generateHydrideCandidates.ts
 ├── generateReport.ts
 └── generateSimulation.ts
 ```
 
-- The xAI provider speaks the OpenAI-compatible chat completions schema.
-- Every generator falls back to deterministic demo data when the provider is unavailable or returns malformed output.
+- The xAI provider speaks the OpenAI-compatible chat-completions schema.
+- All generators fall back to deterministic demo data when the provider is unavailable or returns malformed output.
 - All API keys are read server-side only. Browser bundles never contain the key.
 
 ---
@@ -155,38 +152,31 @@ The overall X-Score is the weighted mean rounded to the nearest integer. Risk fl
 
 ---
 
-## 6. Supabase (NOT YET CONNECTED)
+## 6. Provenance hashing
 
-`supabase/schema.sql` defines the future schema (`candidates`, `reports`, `simulation_files`, `audit_logs`). It is **not** executed automatically. To enable persistence later:
+Every AI generation cycle anchors a SHA-256 hash row:
 
-1. Create a brand-new Supabase project named `x-hydride-lab` (do not reuse existing projects).
-2. Apply `supabase/schema.sql`.
-3. Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` in `.env.local`.
-4. Replace the in-memory loaders inside `src/lib/store/labStore.ts` with Supabase calls.
+| Field | Source |
+| ----- | ------ |
+| `input_hash` | Stable JSON of the generator input. |
+| `output_hash` | Stable JSON of the candidate / generator output. |
+| `report_hash` | Stable JSON of the academic-style note. |
+| `simulation_hash` | Stable JSON of the simulation bundle. |
 
-Until you decide to do this, the lab persists candidates, reports, and audit logs to `localStorage` only.
-
----
-
-## 7. Vercel (NOT YET DEPLOYED)
-
-The project is build-ready for Vercel but is intentionally not deployed. To deploy when ready:
-
-1. Create a brand-new Vercel project (do not reuse existing projects).
-2. Push this repository to a brand-new GitHub repo named `x-hydride-lab`.
-3. Set environment variables in the Vercel dashboard:
-   - `XAI_API_KEY`
-   - `XAI_MODEL` (default `grok-4.3`)
-   - `XAI_BASE_URL` (default `https://api.x.ai/v1`)
-   - Optional Supabase keys (only when you are ready to persist data).
-4. Trigger a build. Next.js 14 / App Router runs on the default Vercel runtime.
+Hashes are computed over a canonicalised JSON payload (sorted keys, no whitespace) so identical inputs always produce identical hashes — suitable for downstream on-chain anchoring if desired.
 
 ---
 
-## 8. Disclaimers
+## 7. Contributing
 
-This software generates exploratory AI research hypotheses only. It does not validate superconductivity. All candidates, scores, reports, and simulation templates are exploratory artifacts and require DFT, DFPT, EPW, Eliashberg, RPA, and experimental validation before any scientific claim can be made.
+PRs welcome. Please:
 
-X-Hydride Lab is a Grok-native research preview. The default AI provider is xAI Grok, configured via `XAI_API_KEY` and `XAI_MODEL` (default `grok-4.3`).
+1. Keep generators conservative and cautious; never claim Tc, claim superconductivity, or imply commercial readiness.
+2. Add `validation_priorities` for every new candidate path.
+3. Run `npm run type-check && npm run build` before submitting.
 
-<!-- ci: trigger initial Vercel deployment -->
+---
+
+## 8. License
+
+[MIT](./LICENSE)
