@@ -177,6 +177,20 @@ PRs welcome. Please:
 
 ---
 
-## 8. License
+## 8. Community · verification
+
+The official X-Hydride Lab community token is launched on **Pump.fun** (Solana). Its canonical mint address is:
+
+```
+7wABWr1g1AEZaszbZkm8bJ6hKN7i4sEDa39HtrxPpump
+```
+
+This address is published **solely for verification** so that observers can confirm which on-chain address is canonical and avoid scam clones or impersonators.
+
+> Nothing in this repository is an offer, solicitation, recommendation, or any form of investment, financial, legal, or tax advice. The community token is independent of the scientific output of this software. No candidate, X-Score, research note, or simulation in this repository implies any financial outcome, and no claim of superconductivity is being made. Do your own research.
+
+---
+
+## 9. License
 
 [MIT](./LICENSE)

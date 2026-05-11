@@ -296,7 +296,43 @@ function FooterBlock() {
           </Link>
         </nav>
       </div>
+
+      <CommunityTokenBlock />
     </footer>
+  );
+}
+
+/**
+ * CommunityTokenBlock — surfaces the canonical Solana mint address solely so
+ * the community can verify which on-chain address is the official one and
+ * avoid scam clones. Published for verification only — not investment advice,
+ * not a solicitation, no claim that research outputs affect token value.
+ */
+function CommunityTokenBlock() {
+  const CA = "7wABWr1g1AEZaszbZkm8bJ6hKN7i4sEDa39HtrxPpump";
+  return (
+    <section
+      aria-label="Community verification"
+      className="mt-10 flex flex-col gap-3 rounded-2xl border border-graphite-800/80 bg-graphite-925/60 px-5 py-5 sm:px-7 sm:py-6"
+    >
+      <p className="text-eyebrow text-graphite-300">Community · verification</p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+        <p className="text-[12.5px] leading-relaxed text-graphite-400">
+          Official community token (Pump.fun · Solana). Listed solely so
+          observers can verify which on-chain address is canonical and avoid
+          impersonators.
+        </p>
+        <code className="break-all font-mono text-mono-tab text-[11.5px] text-graphite-100">
+          {CA}
+        </code>
+      </div>
+      <p className="text-[11.5px] leading-relaxed text-graphite-500">
+        Not an offer, solicitation, or investment, financial, legal, or tax
+        advice. The token is independent of the scientific output of this
+        software; no candidate, X-Score, report, or simulation here implies any
+        financial result. Do your own research.
+      </p>
+    </section>
   );
 }
 
