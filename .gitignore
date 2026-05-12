@@ -44,3 +44,6 @@ review-bundle*.md
 REVIEW-PROMPT.md
 x-hydride-lab-source*.zip
 .DS_Store
+
+# Local secrets (never commit)
+.secrets/
