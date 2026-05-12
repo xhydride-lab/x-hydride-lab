@@ -8,6 +8,7 @@ import {
   buildExplorerUrl,
 } from "@/lib/anchor/solana";
 import { recordActivity } from "@/lib/store/activityLog";
+import { persistDrop } from "@/lib/store/supabase";
 import type { CandidateGenerationRequest } from "@/types";
 
 export const runtime = "nodejs";
@@ -143,6 +144,17 @@ export async function GET(request: Request): Promise<Response> {
     chemical_family: candidate.chemical_family,
     hash: hashes.output_hash,
     tx_signature: signature,
+  });
+
+  // Persist across Vercel workers so the landing card stays in sync.
+  await persistDrop({
+    candidate,
+    audit_id,
+    hashes,
+    modelProvider: "xAI Grok",
+    modelName: process.env.XAI_MODEL || "grok-4.3",
+    version: "0.1.0",
+    txSignature: signature ?? null,
   });
 
   return NextResponse.json(
