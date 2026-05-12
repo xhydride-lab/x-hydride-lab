@@ -4,6 +4,7 @@ import { ScientificDisclaimer } from "@/components/ScientificDisclaimer";
 import { FrameworkDiagram } from "@/components/FrameworkDiagram";
 import { LogomarkBanner, LogomarkLockup } from "@/components/Logomark";
 import { XLink, XGlyph } from "@/components/XLink";
+import { LatestDropCard } from "@/components/LatestDropCard";
 
 const LINEAGE = [
   {
@@ -138,30 +139,33 @@ function Hero() {
             </div>
           </div>
 
-          <aside className="flex flex-col gap-3">
-            <p className="text-eyebrow">Operating parameters</p>
-            <dl className="panel grid grid-cols-1 divide-y divide-graphite-800/80">
-              {[
-                ["Provider", "xAI Grok"],
-                ["Model", "grok-4.3"],
-                ["Output", "json_schema (strict)"],
-                ["Audit hash", "SHA-256"],
-                ["Provenance", "Off-chain ledger"],
-              ].map(([k, v]) => (
-                <div
-                  key={k}
-                  className="flex items-baseline justify-between px-5 py-3"
-                >
-                  <dt className="text-[12.5px] text-graphite-400">{k}</dt>
-                  <dd
-                    className="font-mono text-mono-tab text-[12.5px] text-graphite-100"
-                    data-numeric=""
+          <aside className="flex flex-col gap-5">
+            <LatestDropCard />
+            <div className="flex flex-col gap-3">
+              <p className="text-eyebrow">Operating parameters</p>
+              <dl className="panel grid grid-cols-1 divide-y divide-graphite-800/80">
+                {[
+                  ["Provider", "xAI Grok"],
+                  ["Model", "grok-4.3"],
+                  ["Output", "json_schema (strict)"],
+                  ["Audit hash", "SHA-256"],
+                  ["Provenance", "Solana anchor"],
+                ].map(([k, v]) => (
+                  <div
+                    key={k}
+                    className="flex items-baseline justify-between px-5 py-3"
                   >
-                    {v}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+                    <dt className="text-[12.5px] text-graphite-400">{k}</dt>
+                    <dd
+                      className="font-mono text-mono-tab text-[12.5px] text-graphite-100"
+                      data-numeric=""
+                    >
+                      {v}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           </aside>
         </div>
       </div>

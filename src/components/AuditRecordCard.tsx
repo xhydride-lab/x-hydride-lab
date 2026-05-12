@@ -47,6 +47,21 @@ export function AuditRecordCard({ audit, className }: AuditRecordCardProps) {
         <HashField label="Simulation" value={audit.simulation_hash} />
       </div>
 
+      {audit.tx_hash ? (
+        <div className="hairline flex flex-wrap items-baseline justify-between gap-3 px-5 py-2 text-eyebrow">
+          <span className="text-graphite-500">Solana memo</span>
+          <a
+            href={`https://solscan.io/tx/${audit.tx_hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring rounded-md font-mono text-mono-tab text-[11px] text-accent-300 hover:text-accent-200"
+            data-numeric=""
+          >
+            {audit.tx_hash.slice(0, 12)}…{audit.tx_hash.slice(-6)} ↗
+          </a>
+        </div>
+      ) : null}
+
       <footer className="hairline flex flex-wrap items-center justify-between gap-3 px-5 py-2 text-eyebrow text-graphite-500">
         <span className="font-mono text-mono-tab" data-numeric="">
           {audit.timestamp}

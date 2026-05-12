@@ -152,9 +152,9 @@ The overall X-Score is the weighted mean rounded to the nearest integer. Risk fl
 
 ---
 
-## 6. Provenance hashing
+## 6. Provenance hashing & on-chain anchoring
 
-Every AI generation cycle anchors a SHA-256 hash row:
+Every AI generation cycle produces four SHA-256 hashes:
 
 | Field | Source |
 | ----- | ------ |
@@ -163,11 +163,32 @@ Every AI generation cycle anchors a SHA-256 hash row:
 | `report_hash` | Stable JSON of the academic-style note. |
 | `simulation_hash` | Stable JSON of the simulation bundle. |
 
-Hashes are computed over a canonicalised JSON payload (sorted keys, no whitespace) so identical inputs always produce identical hashes — suitable for downstream on-chain anchoring if desired.
+Hashes are computed over a canonicalised JSON payload (sorted keys, no whitespace) so identical inputs always produce identical hashes.
+
+When `SOLANA_PAYER_SECRET_KEY` is configured, `POST /api/create-audit-log` additionally writes a Solana **Memo program** transaction containing a compact JSON payload with the audit id, candidate id, and the four hashes. The transaction signature is stored on the `AuditLog` record (`tx_hash` field) and surfaced in the UI as a Solscan deep link. Anchoring is best-effort — if the network call fails the record falls back to off-chain mode without losing the audit hashes.
+
+Memo cost is the Solana base fee (~5000 lamports / ~0.000005 SOL per transaction).
 
 ---
 
-## 7. Contributing
+## 7. Daily Hydride Drop
+
+A Vercel-managed cron handler at `/api/cron/daily-drop` runs once per day at **13:00 UTC** (configurable via `vercel.json`). On each run it:
+
+1. Calls the xAI Grok candidate generator with a rotating research focus (one of seven hydride families across the week).
+2. Computes the SHA-256 audit hash payload.
+3. Anchors the payload to Solana via the Memo program (when configured).
+4. Records the event in the in-memory activity log so the landing-page **Latest Hydride Drop** card refreshes automatically.
+
+The endpoint requires `Bearer ${CRON_SECRET}` (sent automatically by Vercel) or a matching `?key=${CRON_SECRET}` query param. To trigger a drop manually:
+
+```bash
+curl -X GET "https://xhydride.xyz/api/cron/daily-drop?key=$CRON_SECRET"
+```
+
+---
+
+## 8. Contributing
 
 PRs welcome. Please:
 
@@ -177,7 +198,7 @@ PRs welcome. Please:
 
 ---
 
-## 8. Community · verification
+## 9. Community · verification
 
 Canonical X-Hydride Lab channels:
 
@@ -197,6 +218,6 @@ All of the above are listed **solely for verification** so that observers can co
 
 ---
 
-## 9. License
+## 10. License
 
 [MIT](./LICENSE)
