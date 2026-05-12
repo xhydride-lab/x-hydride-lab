@@ -41,7 +41,7 @@ export async function GET(request: Request): Promise<Response> {
       { events, source: "supabase", generated_at: new Date().toISOString() },
       {
         status: 200,
-        headers: { "Cache-Control": "public, max-age=15, s-maxage=15" },
+        headers: { "Cache-Control": "no-store, max-age=0" },
       },
     );
   }
@@ -52,7 +52,7 @@ export async function GET(request: Request): Promise<Response> {
     { events, source: "memory", generated_at: new Date().toISOString() },
     {
       status: 200,
-      headers: { "Cache-Control": "public, max-age=5, s-maxage=5" },
+      headers: { "Cache-Control": "no-store, max-age=0" },
     },
   );
 }
